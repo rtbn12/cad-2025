@@ -3,6 +3,7 @@
  */
 package ru.bsuedu.cad.lab;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -10,7 +11,8 @@ public class App {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(Configurator.class);
-        Renderer renderer = context.getBean(Renderer.class);
+        Renderer renderer = context.getBean("HTML_render", Renderer.class);
+//        Renderer renderer = context.getBean( Renderer.class);
         renderer.render();
         context.close();
 

@@ -20,6 +20,8 @@ public class ConsoleTableRenderer implements Renderer {
 
     @Override
     public void render(){
+        System.out.println("Запущен консольный рендер");
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         List<Product> products = provider.getProducts();

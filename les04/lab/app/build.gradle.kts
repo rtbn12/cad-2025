@@ -20,6 +20,11 @@ dependencies {
     // This dependency is used by the application.
     implementation(libs.guava)
     implementation("org.springframework:spring-context:6.2.2")
+    implementation("jakarta.annotation:jakarta.annotation-api:2.1.1")
+    implementation("javax.annotation:javax.annotation-api:1.3.2")
+    implementation("org.aspectj:aspectjweaver:1.9.22")
+
+
 
 }
 
