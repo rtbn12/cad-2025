@@ -1,6 +1,7 @@
 package ru.bsuedu.cad.lab;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.bsuedu.cad.lab.Parser;
 import ru.bsuedu.cad.lab.Product;
@@ -17,7 +18,7 @@ public class ConcreteProductProvider implements ProductProvider {
     private Parser parser;
 
     @Autowired
-    public ConcreteProductProvider(Reader reader, Parser parser) {
+    public ConcreteProductProvider(@Qualifier("productFileReader") Reader reader, Parser parser) {
         this.reader = reader;
         this.parser = parser;
     }

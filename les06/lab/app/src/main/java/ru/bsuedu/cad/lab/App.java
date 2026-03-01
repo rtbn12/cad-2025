@@ -11,9 +11,13 @@ public class App {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(Configurator.class);
-        Renderer renderer = context.getBean("HTML_render", Renderer.class);
+//        Renderer renderer = context.getBean("HTML_render", Renderer.class);
 //        Renderer renderer = context.getBean( Renderer.class);
+        Renderer renderer = context.getBean("dbr", Renderer.class);
         renderer.render();
+
+        Request categoryRequest = context.getBean("creq",Request.class);
+        categoryRequest.consoleRequest();
         context.close();
 
 

@@ -32,6 +32,8 @@ dependencies {
 // Если используете Hibernate (опционально)
     implementation("org.hibernate.orm:hibernate-core:6.4.2.Final")
 
+    implementation("ch.qos.logback:logback-classic:1.5.6")
+
 
 
 }

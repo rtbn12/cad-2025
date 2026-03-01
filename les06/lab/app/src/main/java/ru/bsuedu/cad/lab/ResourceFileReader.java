@@ -12,12 +12,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Objects;
 
-@Component("rfr")
+//@Component("rfr")
 public class ResourceFileReader implements Reader {
 
-    @Value("#{property.name}")
+//    @Value("#{property.name}")
+//    private String fileName;
+
     private String fileName;
 
+    public ResourceFileReader(String fileName) {
+        this.fileName = fileName;
+    }
 
     @PostConstruct
     public void init(){

@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0735b11b-de1f-41ee-b664-b4589d422bbd" name="Changes" comment="first commit">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/Category.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/CategoryCSVParser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/CategoryParser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/CategoryProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/CategoryRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/ConcreteCategoryProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/DataBaseRenderer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/Request.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/resources/data.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/resources/schema.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img_15.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img_16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img_17.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img_18.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img_19.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img_20.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img_21.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img_22.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/lab.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/ConcreteProductProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/ConcreteProductProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/Configurator.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/Configurator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/ResourceFileReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/ResourceFileReader.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="product-table" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="product-table" type="f1a62948:ProjectNode" />
+                <item name="app" type="2d1252cf:ModuleNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;rtbn12&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/rtbn12/cad-2025.git&quot;,
+    &quot;accountId&quot;: &quot;e7e2171e-72e5-4fbe-bab0-ff44cb1f1f3e&quot;
+  }
+}</component>
+  <component name="GradleScriptDefinitionsStorage" workingDir="$PROJECT_DIR$" gradleHome="C:\Users\solod\.gradle\wrapper\dists\gradle-8.12-bin\cetblhg4pflnnks72fxwobvgv\gradle-8.12" javaHome="C:\Program Files\Axiom\AxiomJDK-17" gradleVersion="8.12" />
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="39XvNoi6nJIOQDawRHLMmAMfQG2" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Gradle.Build lab.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.lab [app:build].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.lab [app:clean].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.lab [build].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.lab [run].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.lab [test].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.lab:app [:app:labWork.Program.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.lab:app [:app:ru.bsuedu.cad.lab.App.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.lab:app [:app:ru.bsuedu.cad.lab.labWork.Program.main()].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;datagrid.heatmap.switchedByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/solod/OneDrive/Desktop/лабыБелГУ/BSU2026/KROSSpLATFORMI/cad-2025/les06/lab&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.general&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\solod\OneDrive\Desktop\лабыБелГУ\BSU2026\KROSSpLATFORMI\cad-2025\les02\lab\app\src\main\java\ru\bsuedu\cad\lab" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="ru.bsuedu.cad.lab" />
+    </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="gradle test --stacktrace" />
+      <command value="gradle app:build" />
+      <command value="gradle app:clean" />
+      <command value="gradle build" />
+      <command value="gradle run" />
+    </option>
+  </component>
+  <component name="RunManager" selected="Gradle.lab [run]">
+    <configuration name="lab [app:build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="app:build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="lab [app:clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="app:clean" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="lab [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="lab [run]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="run" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="lab [test]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--stacktrace" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="lab" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="lab" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.lab [run]" />
+        <item itemvalue="Gradle.lab [build]" />
+        <item itemvalue="Gradle.lab [app:clean]" />
+        <item itemvalue="Gradle.lab [test]" />
+        <item itemvalue="Gradle.lab [app:build]" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0735b11b-de1f-41ee-b664-b4589d422bbd" name="Changes" comment="" />
+      <created>1770855192778</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1770855192778</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Лабораторная работа номер 1, Солодов Егор Николаевич, 12002408">
+      <option name="closed" value="true" />
+      <created>1771152937385</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1771152937385</updated>
+    </task>
+    <task id="LOCAL-00002" summary="добавил недостающие файлы">
+      <option name="closed" value="true" />
+      <created>1771155332537</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1771155332537</updated>
+    </task>
+    <task id="LOCAL-00003" summary="first commit">
+      <option name="closed" value="true" />
+      <created>1772012076658</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1772012076658</updated>
+    </task>
+    <task id="LOCAL-00004" summary="two commit">
+      <option name="closed" value="true" />
+      <created>1772049959400</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1772049959400</updated>
+    </task>
+    <task id="LOCAL-00005" summary="first commit">
+      <option name="closed" value="true" />
+      <created>1772306624671</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1772306624671</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
+    <servers />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.cmd" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Лабораторная работа номер 1, Солодов Егор Николаевич, 12002408" />
+    <MESSAGE value="добавил недостающие файлы" />
+    <MESSAGE value="two commit" />
+    <MESSAGE value="first commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="first commit" />
+  </component>
+</project>
