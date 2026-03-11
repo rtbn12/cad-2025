@@ -4,36 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0735b11b-de1f-41ee-b664-b4589d422bbd" name="Changes" comment="first commit">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/Category.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/CategoryCSVParser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/CategoryParser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/CategoryProvider.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/CategoryRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/ConcreteCategoryProvider.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/DataBaseRenderer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/Request.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/resources/data.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/resources/schema.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img_15.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img_16.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img_17.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img_18.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img_19.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img_20.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img_21.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img_22.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/lab.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/ConcreteProductProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/ConcreteProductProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/Configurator.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/Configurator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/ResourceFileReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ru/bsuedu/cad/lab/ResourceFileReader.java" afterDir="false" />
+    <list default="true" id="0735b11b-de1f-41ee-b664-b4589d422bbd" name="Changes" comment="two commit">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -326,7 +298,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772306624671</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="two commit">
+      <option name="closed" value="true" />
+      <created>1772375256381</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1772375256381</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -335,8 +315,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Лабораторная работа номер 1, Солодов Егор Николаевич, 12002408" />
     <MESSAGE value="добавил недостающие файлы" />
-    <MESSAGE value="two commit" />
     <MESSAGE value="first commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="first commit" />
+    <MESSAGE value="two commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="two commit" />
   </component>
 </project>
