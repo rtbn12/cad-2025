@@ -26,7 +26,7 @@ public class AppConfig {
     @Bean
     public DataSource dataSource() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:h2:~/lab4;DB_CLOSE_ON_EXIT=FALSE");
+        config.setJdbcUrl("jdbc:h2:~/lab4");
         config.setUsername("sa");
         config.setPassword("");
         config.setDriverClassName("org.h2.Driver");

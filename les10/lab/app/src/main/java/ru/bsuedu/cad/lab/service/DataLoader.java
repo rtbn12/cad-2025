@@ -10,10 +10,7 @@ import ru.bsuedu.cad.lab.repository.CategoriesRepository;
 import ru.bsuedu.cad.lab.repository.CustomersRepository;
 import ru.bsuedu.cad.lab.repository.ProductsRepository;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -49,7 +46,8 @@ public class DataLoader {
 
 
         try {
-            BufferedReader CategoryReader = new BufferedReader(new FileReader("src/main/resources/category.csv"));
+//            BufferedReader CategoryReader = new BufferedReader(new FileReader("src/main/resources/category.csv"));
+            BufferedReader CategoryReader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("category.csv")));
 
             CategoryReader.readLine();
 
@@ -75,7 +73,8 @@ public class DataLoader {
         }
 
         try {
-            BufferedReader customerReader = new BufferedReader(new FileReader("src/main/resources/customer.csv"));
+//            BufferedReader customerReader = new BufferedReader(new FileReader("src/main/resources/customer.csv"));
+            BufferedReader customerReader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("customer.csv")));
 
             customerReader.readLine();
 
@@ -100,7 +99,8 @@ public class DataLoader {
 
 
         try {
-            BufferedReader productReader = new BufferedReader(new FileReader("src/main/resources/product.csv"));
+//            BufferedReader productReader = new BufferedReader(new FileReader("src/main/resources/product.csv"));
+            BufferedReader productReader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("product.csv")));
 
             productReader.readLine();
 
