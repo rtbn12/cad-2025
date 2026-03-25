@@ -34,6 +34,8 @@ dependencies {
     // Servlet API — provided scope
     compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
     testImplementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
+
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.0")
 }
 
 java {

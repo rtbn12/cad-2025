@@ -146,6 +146,8 @@ public class information_of_oreders extends HttpServlet {
 
         out.println("<a href='" + req.getContextPath() + "/create-order' class='button'>Создать новый заказ</a>");
 
+        out.println("<a href='" + req.getContextPath() + "/productTable' class='button'>Подробнее о продуктах</a>");
+
         out.println("</body>");
         out.println("</html>");
          out.close();
