@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактировать заказ</title>
+    <style>
+        form { width: 50%; margin: 0 auto; }
+        label { display: block; margin-top: 10px; }
+        input, select { width: 100%; padding: 8px; margin-top: 5px; }
+        button { margin-top: 20px; padding: 10px 20px; background-color: #2196F3; color: white; border: none; cursor: pointer; }
+        .cancel { background-color: #999; margin-left: 10px; display: inline-block; padding: 10px 20px; text-decoration: none; border-radius: 4px; color: white; }
+    </style>
+</head>
+<body>
+<h1>Редактирование заказа #<span th:text="${order.orderId}"></span></h1>
+<form method="post" th:action="@{/web/orders/edit/{id}(id=${order.orderId})}">
+    <label>Статус:</label>
+    <select name="status">
+        <option th:selected="${order.status == 'НОВЫЙ'}" value="НОВЫЙ">НОВЫЙ</option>
+        <option th:selected="${order.status == 'ОПЛАЧЕН'}" value="ОПЛАЧЕН">ОПЛАЧЕН</option>
+        <option th:selected="${order.status == 'ОТПРАВЛЕН'}" value="ОТПРАВЛЕН">ОТПРАВЛЕН</option>
+        <option th:selected="${order.status == 'ДОСТАВЛЕН'}" value="ДОСТАВЛЕН">ДОСТАВЛЕН</option>
+        <option th:selected="${order.status == 'ОТМЕНЕН'}" value="ОТМЕНЕН">ОТМЕНЕН</option>
+    </select>
+
+    <label>Адрес доставки:</label>
+    <input type="text" name="shippingAddress" th:value="${order.shippingAddress}" required/>
+
+    <button type="submit">💾 Сохранить изменения</button>
+    <a th:href="@{/web/orders}" class="cancel">❌ Отмена</a>
+</form>
+</body>
+</html>

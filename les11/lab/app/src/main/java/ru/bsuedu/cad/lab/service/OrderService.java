@@ -103,4 +103,15 @@ public class OrderService {
         return order;
 
     }
+
+    @Transactional
+    public void deleteOrder(Long id) {
+        ordersRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Orders getOrderById(Long id) {
+        return ordersRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found: " + id));
+    }
 }

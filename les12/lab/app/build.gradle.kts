@@ -49,6 +49,7 @@ java {
 // Настройка WAR-задачи
 tasks.war {
     archiveFileName = "my-app.war"
+    from("app/src/main/webapp")  // указываем, где лежит webapp
 }
 
 // Кодировка для компиляции
