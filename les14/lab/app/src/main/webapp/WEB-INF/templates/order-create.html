@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Создать заказ</title>
+    <style>
+        form { width: 50%; margin: 0 auto; }
+        label { display: block; margin-top: 10px; }
+        input, select { width: 100%; padding: 8px; margin-top: 5px; }
+        button { margin-top: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        .cancel { background-color: #999; margin-left: 10px; display: inline-block; padding: 10px 20px; text-decoration: none; border-radius: 4px; }
+    </style>
+</head>
+<body>
+<h1>Создание нового заказа</h1>
+<form method="post" th:action="@{/web/create-test}">
+    <label>ID клиента:</label>
+    <input type="number" name="customerId" required/>
+
+    <label>Статус:</label>
+    <select name="status">
+        <option value="НОВЫЙ">НОВЫЙ</option>
+        <option value="ОПЛАЧЕН">ОПЛАЧЕН</option>
+        <option value="ОТПРАВЛЕН">ОТПРАВЛЕН</option>
+        <option value="ДОСТАВЛЕН">ДОСТАВЛЕН</option>
+        <option value="ОТМЕНЕН">ОТМЕНЕН</option>
+    </select>
+
+    <label>Адрес доставки:</label>
+    <input type="text" name="shippingAddress" required/>
+
+    <label>ID товара:</label>
+    <input type="number" name="productId" required/>
+
+    <label>Количество:</label>
+    <input type="number" name="quantity" required min="1"/>
+
+    <button type="submit">✅ Создать заказ</button>
+    <a th:href="@{/web/orders}" class="cancel">❌ Отмена</a>
+</form>
+</body>
+</html>
