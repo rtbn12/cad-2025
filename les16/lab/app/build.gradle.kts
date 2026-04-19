@@ -118,3 +118,7 @@ tasks.war {
 application {
     mainClass.set("ru.bsuedu.cad.lab.app.App")
 }
+
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
+}
