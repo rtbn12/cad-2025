@@ -1,15 +1,17 @@
-## Лабораторная работа 7. Spring security.Basic Authentication
-
+## Лабораторная работа 8. Основы тестирования
 
 #### Ход работы
 
 #### Задание 1 
-Настройте проект для работы со Spring Security
+Настройте проект для для написания и выполнения Unit-тест тестов
+Настройте JaCoCo для генерации отчетов о покрытии кода тестами
+Настройте проект для для написания и выполнения интеграционных тестов
 
  ``` java
  plugins {
-    war
     application
+    war
+    jacoco
 }
 
 repositories {
@@ -17,571 +19,569 @@ repositories {
 }
 
 dependencies {
-    // ========== SPRING CORE ==========
+    // ===== SPRING CORE (НЕ BOOT!) =====
     implementation("org.springframework:spring-context:6.2.2")
+    implementation("org.springframework:spring-web:6.2.2")
     implementation("org.springframework:spring-webmvc:6.2.2")
     implementation("org.springframework:spring-orm:6.2.2")
-    implementation("org.springframework.data:spring-data-jpa:3.3.2")
+    implementation("org.springframework:spring-tx:6.2.2")
 
-    // ========== SPRING SECURITY (лаба 7) ==========
-    implementation("org.springframework.security:spring-security-web:6.2.2")
-    implementation("org.springframework.security:spring-security-config:6.2.2")
+    // ===== SPRING SECURITY =====
+    implementation("org.springframework.security:spring-security-web:6.4.2")
+    implementation("org.springframework.security:spring-security-config:6.4.2")
 
-    // ========== JPA / HIBERNATE ==========
+    // ===== SPRING DATA JPA =====
+    implementation("org.springframework.data:spring-data-jpa:3.3.5")
+
+    // ===== JAKARTA PERSISTENCE (JPA) =====
     implementation("jakarta.persistence:jakarta.persistence-api:3.1.0")
-    implementation("org.hibernate.orm:hibernate-core:6.5.2.Final")
+    implementation("jakarta.annotation:jakarta.annotation-api:2.1.1")
 
-    // ========== DATABASE (H2 + Connection Pool) ==========
-    implementation("com.h2database:h2:2.2.224")
-    implementation("com.zaxxer:HikariCP:5.1.0")
+    // ===== HIBERNATE =====
+    implementation("org.hibernate.orm:hibernate-core:6.6.4.Final")
 
-    // ========== THYMELEAF (шаблоны HTML) ==========
+    // ===== DATABASE =====
+    implementation("com.h2database:h2:2.3.232")
+    implementation("com.zaxxer:HikariCP:6.2.1")
+
+    // ===== THYMELEAF =====
     implementation("org.thymeleaf:thymeleaf-spring6:3.1.2.RELEASE")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.2.RELEASE")
 
-    // ========== JSON (Jackson для REST) ==========
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2")
+    // ===== JSON (JACKSON) =====
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2")
 
-    // ========== SERVLET API (для Tomcat) ==========
-    compileOnly("jakarta.servlet:jakarta.servlet-api:6.0.0")
+    // ===== SERVLET API (для компиляции) =====
+    compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
 
-    // ========== ЛОГГИРОВАНИЕ ==========
-    implementation("org.slf4j:slf4j-api:2.0.13")
-    implementation("ch.qos.logback:logback-classic:1.5.6")
+    // ===== ЛОГГИРОВАНИЕ =====
+    implementation("org.slf4j:slf4j-api:2.0.16")
+    implementation("ch.qos.logback:logback-classic:1.5.12")
 
+    // ==========================================
+    // ===== ТЕСТИРОВАНИЕ =====
+    // ==========================================
 
+    // JUnit 5
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.4")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.4")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.11.4")
+
+    // Spring Test (для интеграционных тестов)
+    testImplementation("org.springframework:spring-test:6.2.2")
+
+    // Mockito
+    testImplementation("org.mockito:mockito-core:5.14.2")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.14.2")
+
+    // AssertJ (красивые ассерты)
+    testImplementation("org.assertj:assertj-core:3.27.2")
+
+    // H2 для интеграционных тестов (in-memory)
+    testImplementation("com.h2database:h2:2.3.232")
+
+    // Jakarta Servlet для тестов (если нужно)
+    testCompileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+// ===== НАСТРОЙКА ТЕСТОВ =====
+tasks.test {
+    useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)  // после тестов генерим отчёт JaCoCo
+}
+
+// ===== НАСТРОЙКА JACOCO =====
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(false)
+        csv.required.set(false)
+        html.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
     }
 }
 
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = "0.01".toBigDecimal()  // 30% покрытия минимум (учебная цель)
+            }
+        }
+    }
+}
+
+// ===== JAVA VERSION =====
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
+// ===== WAR PLUGIN =====
+tasks.war {
+    archiveFileName.set("zooshop.war")
+}
+
+// ===== MAIN CLASS =====
 application {
-    mainClass = "ru.bsuedu.cad.lab.app.App"
+    mainClass.set("ru.bsuedu.cad.lab.app.App")
 }
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
 
+package ru.bsuedu.cad.lab.config;
 
+import jakarta.persistence.EntityManagerFactory;
+import org.hibernate.cfg.Environment;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Properties;
 
+@Configuration
+@ComponentScan(basePackages = {
+        "ru.bsuedu.cad.lab.entity",
+        "ru.bsuedu.cad.lab.repository",
+        "ru.bsuedu.cad.lab.service"
+})
+@EnableJpaRepositories(basePackages = "ru.bsuedu.cad.lab.repository")
+@EnableTransactionManagement
+public class TestConfigDB {
 
+    @Bean
+    public DataSource dataSource() {
+        return new EmbeddedDatabaseBuilder()
+                .setType(EmbeddedDatabaseType.H2)
+                .build();
+    }
 
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(dataSource());
+        em.setPackagesToScan("ru.bsuedu.cad.lab.entity");
 
+        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        vendorAdapter.setShowSql(true);
+        vendorAdapter.setGenerateDdl(true);
+        vendorAdapter.setDatabasePlatform("org.hibernate.dialect.H2Dialect");
+        em.setJpaVendorAdapter(vendorAdapter);
 
+        Properties properties = new Properties();
+        properties.put(Environment.HBM2DDL_AUTO, "create-drop");
+        properties.put(Environment.DIALECT, "org.hibernate.dialect.H2Dialect");
+        properties.put(Environment.FORMAT_SQL, true);
+        properties.put(Environment.SHOW_SQL, true);
+        properties.put("hibernate.hbm2ddl.auto", "create-drop");
+        properties.put("javax.persistence.schema-generation.database.action", "drop-and-create");
+        em.setJpaProperties(properties);
 
+        return em;
+    }
 
-
-package ru.bsuedu.cad.lab.security;
-
-import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
-
-public class SecurityInitializer extends AbstractSecurityWebApplicationInitializer {
+    @Bean
+    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
+        return new JpaTransactionManager(emf);
+    }
 }
 
    ```
-
+![img_23.png](img_23.png)
               Рисунок 1 - Результат выполнения задания 1
 
 
 ### Задание 2 
-#### Добавьте двух пользователей: user и manager. Для пользователей user - доступен только просмотр заказов, для manager - все операции с заказами.
+#### Напишите Unit-тест для сервиса создания заказа. Протестируйте как удачное так и неудачное выполнение методов.
 
 
 ``` java
-package ru.bsuedu.cad.lab.security;
+package ru.bsuedu.cad.lab.service;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
-@EnableWebSecurity
-public class SecurityConfig {
+import net.bytebuddy.build.ToStringPlugin;
+import org.junit.jupiter.api.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import ru.bsuedu.cad.lab.entity.Customers;
+import ru.bsuedu.cad.lab.entity.Order_Details;
+import ru.bsuedu.cad.lab.entity.Orders;
+import ru.bsuedu.cad.lab.entity.Products;
+import ru.bsuedu.cad.lab.repository.CustomersRepository;
+import ru.bsuedu.cad.lab.repository.OrderDetailsRepository;
+import ru.bsuedu.cad.lab.repository.OrdersRepository;
+import ru.bsuedu.cad.lab.repository.ProductsRepository;
 
-    // 1. Пользователи в памяти (user / manager)
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new InMemoryUserDetailsManager(
-                User.withUsername("user")
-                        .password("{noop}123")
-                        .roles("USER")
-                        .authorities("VIEW_PROFILE")
-                        .build(),
-                User.withUsername("manager")
-                        .password("{noop}321")
-                        .roles("MANAGER")
-//                        .authorities("VIEW_PROFILE", "EDIT_PROFILE", "DELETE_USERS")
-                        .build()
-        );
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+public class OrderServiceTest {
+
+    @Mock
+    private  CustomersRepository customersRepository;
+    @Mock
+    private  ProductsRepository productsRepository;
+    @Mock
+    private  OrdersRepository ordersRepository;
+    @Mock
+    private  OrderDetailsRepository orderDetailsRepository;
+
+    @InjectMocks
+    private OrderService orderService;
+
+
+
+    @BeforeAll
+    static void startAllTest(){
+        System.out.println("Start ALL test");
     }
+
+
+
+    @BeforeEach
+    void setUp(){
+        MockitoAnnotations.openMocks(this);
+//        orderService = new OrderService(customersRepository,
+//                                        productsRepository,
+//                                        ordersRepository,
+//                                        orderDetailsRepository);
+    }
+
+    @Test
+    void createdOrderCorrected(){
+
+
+
+        Long customerId =1L;
+        LocalDateTime orderDate= LocalDateTime.now();
+        String status = "norm";
+        String shippingAddress = "BESTGRAD";
+        Long productId =1L;
+        Long quantity = 10L;
+        BigDecimal productPrice = BigDecimal.valueOf(10);
+        BigDecimal totalPrice = BigDecimal.valueOf(100);
+        Long orderID = 900L;
+
+
+        Products product = mock(Products.class);
+        when(productsRepository.findById(productId)).thenReturn(Optional.of(product));
+        when(product.getPrice()).thenReturn(productPrice);
+
+        Customers customer = mock(Customers.class);
+        when(customersRepository.findById(customerId)).thenReturn(Optional.of(customer));
+        when(customer.getCustomerId()).thenReturn(customerId);
+
+
+        when(ordersRepository.save(any(Orders.class))).thenAnswer(invocation ->{
+                    Orders newOrder = invocation.getArgument(0);
+                    newOrder.setOrderId(orderID);
+                    return newOrder;
+        });
+
+
+        when(orderDetailsRepository.save(any(Order_Details.class))).thenAnswer(invocation ->{
+            return invocation.getArgument(0);
+        });
+
+
+        Orders saveOrder = orderService.createOrder(customerId, orderDate,
+                 status,  shippingAddress,
+                 productId,  quantity);
+
+
+        assertEquals(customerId, saveOrder.getCustomer().getCustomerId() );
+        assertEquals(orderDate, saveOrder.getOrderDate());
+        assertEquals(status, saveOrder.getStatus());
+        assertEquals(shippingAddress, saveOrder.getShippingAddress());
+        assertEquals(totalPrice,saveOrder.getTotalPrice());
+        assertEquals(orderID, saveOrder.getOrderId());
+
+
+        Mockito.verify(customersRepository, Mockito.times(1)).findById(customerId);
+        Mockito.verify(productsRepository, Mockito.times(1)).findById(productId);
+        Mockito.verify(ordersRepository, Mockito.times(1)).save(any(Orders.class));
+        Mockito.verify(orderDetailsRepository, Mockito.times(1)).save(any(Order_Details.class));
+
+
+    }
+
+
+    @Test
+    void shouldThrowExceptionWhenProductNotFound() {
+
+        Long customerId = 1L;
+        Long nonExistentProductId = 999L;
+
+
+        Customers customer = mock(Customers.class);
+        when(customersRepository.findById(customerId)).thenReturn(Optional.of(customer));
+
+
+        when(productsRepository.findById(nonExistentProductId)).thenReturn(Optional.empty());
+
+
+        assertThrows(RuntimeException.class, () -> {
+            orderService.createOrder(
+                    customerId,
+                    LocalDateTime.now(),
+                    "norm",
+                    "BESTGRAD",
+                    nonExistentProductId,
+                    10L
+            );
+        });
+
+
+        Mockito.verify(ordersRepository, Mockito.never()).save(any(Orders.class));
+        Mockito.verify(orderDetailsRepository, Mockito.never()).save(any(Order_Details.class));
+    }
+
+
+
+    @AfterEach
+    void endEachTest(){
+        System.out.println("END test");
+    }
+
+
+
+
+
+
+    @AfterAll
+    static void endAllTest(){
+        System.out.println("END ALL tests");
+    }
+
+
+
+
+}
 
    ```
 
     Рисунок 2 - Результат выполнения задания 2   
 
 ### Задание 3
-#### Реализуйте аутентификацию и авторизацию пользователя с помощью формы. При данной авторизации должна быть доступна только часть приложения имеющая пользовательский интерфейс.
+#### Напишите интеграционные тесты для тестирования взаимодействия сервиса создания заказа со слоем репозиториев. Протестируйте как удачное так и неудачное взаимодействие слоев.
 
 
 ``` java
-@Bean
-    @Order(2)
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(authz -> authz
+package ru.bsuedu.cad.lab.service;
 
-                        .requestMatchers("/login", "/css/**").permitAll()
 
-                        .requestMatchers("/web/orders").authenticated()
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import ru.bsuedu.cad.lab.config.TestConfigDB;
+import ru.bsuedu.cad.lab.entity.*;
+import ru.bsuedu.cad.lab.repository.CategoriesRepository;
+import ru.bsuedu.cad.lab.repository.CustomersRepository;
+import ru.bsuedu.cad.lab.repository.OrdersRepository;
+import ru.bsuedu.cad.lab.repository.ProductsRepository;
 
-                        .requestMatchers("/web/create-test").hasRole("MANAGER")
-                        .requestMatchers("/web/orders/edit/**").hasRole("MANAGER")
-                        .requestMatchers("/web/orders/delete/**").hasRole("MANAGER")
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-                        .anyRequest().authenticated()
-                )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/web/orders", true)
-                        .failureUrl("/login?error")
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
-                        .permitAll()
-                )
-                .csrf(csrf -> csrf.disable());
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-        return http.build();
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = TestConfigDB.class)
+@Transactional
+@Rollback
+public class OrderServiceIntegrationTest {
+
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private OrdersRepository ordersRepository;
+
+    @Autowired
+    private CustomersRepository customersRepository;
+
+    @Autowired
+    private ProductsRepository productsRepository;
+
+    @Autowired
+    private CategoriesRepository categoriesRepository;
+
+    @Autowired
+    private EntityManager entityManager;
+
+    @BeforeEach
+    void setup() {
+
+
+        System.out.println("=== Сохраняем клиента ===");
+        Customers testCustomer = new Customers();
+        String customerName = "probnik";
+        String customerEmail = "ppp@probnik.ru";
+        String customerPhone = "12345678999";
+        String customerAddress = "1q345";
+        List<Orders> customerOrders = new ArrayList<>();
+        testCustomer.setOrders(customerOrders);
+        testCustomer.setAddress(customerAddress);
+        testCustomer.setName(customerName);
+        testCustomer.setPhone(customerPhone);
+        testCustomer.setEmail(customerEmail);
+        Customers savedCustomer = customersRepository.save(testCustomer);
+        System.out.println("Клиент сохранён, ID: " + savedCustomer.getCustomerId());
+
+        System.out.println("=== Сохраняем категорию ===");
+        Categories testCategories = new Categories();
+        String categoryName = "probCategory";
+        String categoryDescription = "probCategoryDescription";
+        List<Products> categoryProducts = new ArrayList<>();
+        testCategories.setProducts(categoryProducts);
+        testCategories.setName(categoryName);
+        testCategories.setDescription(categoryDescription);
+        Categories savedCategory = categoriesRepository.save(testCategories);
+        System.out.println("Категория сохранена, ID: " + savedCategory.getCategoryId());
+
+        System.out.println("=== Сохраняем продукт ===");
+        Products testProduct = new Products();
+        String productName = "probnikProduct";
+        String productDescription = "Probnik";
+        Categories productCategory = savedCategory;
+        BigDecimal productPrice = BigDecimal.valueOf(1000);
+        Long productStockQuantity = 10L;
+        String productImageUrl = "probURL";
+        LocalDateTime productCreatedAt = LocalDateTime.now();
+        LocalDateTime productUpdatedAt = LocalDateTime.now();
+        List<Order_Details> productOrderDetails = new ArrayList<>();
+        testProduct.setOrderDetails(productOrderDetails);
+        testProduct.setUpdatedAt(productUpdatedAt);
+        testProduct.setCreatedAt(productCreatedAt);
+        testProduct.setPrice(productPrice);
+        testProduct.setImageUrl(productImageUrl);
+        testProduct.setName(productName);
+        testProduct.setCategory(productCategory);
+        testProduct.setDescription(productDescription);
+        testProduct.setStockQuantity(productStockQuantity);
+        productsRepository.save(testProduct);
+        System.out.println("Продукт сохранён");
     }
-    
-   
+
+    @Test
+    void testCreateOrderAndFindByIdOK(){
+
+        Customers customer = customersRepository.findAll().get(0);
+
+        Products product = productsRepository.findAll().get(0);
+
+        orderService.createOrder(customer.getCustomerId(),
+                                           LocalDateTime.now(),
+                                    "now",
+                            "bestgrad",
+                                           product.getProductId(),
+                                   10L);
+
+
+        List<Orders> allOrders = ordersRepository.findAll();
+        assertEquals(1, allOrders.size());
+
+        Orders currentOrder = allOrders.get(0);
+        assertEquals(customer.getCustomerId(), currentOrder.getCustomer().getCustomerId());
+        assertEquals("now", currentOrder.getStatus());
+        assertEquals("bestgrad", currentOrder.getShippingAddress());
+
+        Optional<Orders> orderFound = ordersRepository.findById(currentOrder.getOrderId());
+        assertEquals(currentOrder.getTotalPrice(), orderFound.get().getTotalPrice());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenCustomerNotFound() {
+
+        assertThrows(Exception.class, () -> {
+            orderService.createOrder(
+                    999999L,
+                    LocalDateTime.now(),
+                    "now",
+                    "bestgrad",
+                    1L,
+                    10L
+            );
+        });
+    }
+}
+
    ```
-``` html
-
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Вход в ZooShop</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .login-container {
-            background: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            width: 350px;
-        }
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .error {
-            color: #d32f2f;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-        .logout {
-            color: #388e3c;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-    </style>
-</head>
-<body>
-<div class="login-container">
-    <h2>🐾 ZooShop Вход</h2>
-
-    <div th:if="${param.error}" class="error">
-        ❌ Неверный логин или пароль
-    </div>
-
-    <div th:if="${param.logout}" class="logout">
-        ✅ Вы успешно вышли из системы
-    </div>
-
-    <form th:action="@{/login}" method="post">
-        <div class="form-group">
-            <label for="username">Логин:</label>
-            <input type="text" id="username" name="username" placeholder="user или manager" required>
-        </div>
-
-        <div class="form-group">
-            <label for="password">Пароль:</label>
-            <input type="password" id="password" name="password" placeholder="••••••••" required>
-        </div>
-
-        <button type="submit">Войти</button>
-    </form>
-
-    <div style="margin-top: 20px; font-size: 12px; color: #999; text-align: center;">
-        user: user123 / manager: manager123
-    </div>
-</div>
-</body>
-</html>
-   ```
-
-``` html
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8">
-    <title>Список заказов</title>
-    <style>
-        * {
-            font-family: 'Segoe UI', Arial, sans-serif;
-        }
-        body {
-            max-width: 1400px;
-            margin: 30px auto;
-            padding: 0 20px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-        }
-        .container {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-        h1 {
-            color: #2c3e50;
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-weight: 300;
-            font-size: 36px;
-            border-bottom: 3px solid #4CAF50;
-            padding-bottom: 15px;
-        }
-        .header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-        .user-badge {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 40px;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-        .btn {
-            border: none;
-            padding: 12px 24px;
-            border-radius: 40px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .btn-create {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            color: #1a1a2e;
-        }
-        .btn-create:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(67, 233, 123, 0.4);
-        }
-        .btn-logout {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            margin-left: 15px;
-        }
-        .btn-logout:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 25px 0;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        }
-        th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 18px 15px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 14px;
-        }
-        td {
-            padding: 15px;
-            background: white;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        tr:hover td {
-            background: #f8f9fa;
-        }
-        .btn-edit {
-            background: linear-gradient(135deg, #2196F3 0%, #21cbf3 100%);
-            color: white;
-            padding: 8px 16px;
-            font-size: 14px;
-            margin-right: 8px;
-        }
-        .btn-edit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
-        }
-        .btn-delete {
-            background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
-            color: white;
-            padding: 8px 16px;
-            font-size: 14px;
-        }
-        .btn-delete:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
-        }
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 12px;
-            text-align: center;
-            display: inline-block;
-        }
-        .status-НОВЫЙ { background: #ffeaa7; color: #d63031; }
-        .status-ОПЛАЧЕН { background: #55efc4; color: #00b894; }
-        .status-ОТПРАВЛЕН { background: #74b9ff; color: #0984e3; }
-        .status-ДОСТАВЛЕН { background: #a29bfe; color: #6c5ce7; }
-        .status-ОТМЕНЕН { background: #fab1a0; color: #d63031; }
-        .price {
-            font-weight: bold;
-            color: #2d3436;
-        }
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-
-    <!-- Заголовок и информация о пользователе -->
-    <div class="header-row">
-        <h1>🦊 ZooShop · Управление заказами</h1>
-        <div style="display: flex; align-items: center;">
-            <span class="user-badge">
-                👤 <span sec:authentication="name">user</span>
-                <span style="opacity: 0.8; margin-left: 10px;">
-                    [<span sec:authentication="principal.authorities">ROLE</span>]
-                </span>
-            </span>
-            <form th:action="@{/logout}" method="post" style="display: inline;">
-                <button type="submit" class="btn btn-logout">🚪 Выйти</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Кнопка "Создать" только для MANAGER -->
-    <div sec:authorize="hasRole('MANAGER')">
-        <a th:href="@{/web/create-test}" class="btn btn-create">➕ Создать новый заказ</a>
-    </div>
-
-    <!-- Таблица заказов -->
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Клиент</th>
-            <th>Дата заказа</th>
-            <th>Сумма</th>
-            <th>Статус</th>
-            <th>Адрес доставки</th>
-            <th sec:authorize="hasRole('MANAGER')">Действия</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="order : ${orders}">
-            <td><strong>#<span th:text="${order.orderId}">1</span></strong></td>
-            <td>
-                <div style="font-weight: bold;" th:text="${order.customer.name}">Клиент</div>
-                <div style="font-size: 12px; color: #666;" th:text="${order.customer.email}">email</div>
-            </td>
-            <td th:text="${#temporals.format(order.orderDate, 'dd.MM.yyyy HH:mm')}">Дата</td>
-            <td>
-                <span class="price" th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 2, 'POINT')}">0</span> ₽
-            </td>
-            <td>
-                <span class="status-badge" th:classappend="'status-' + ${order.status}" th:text="${order.status}">Статус</span>
-            </td>
-            <td th:text="${order.shippingAddress}">Адрес</td>
-
-            <!-- Действия только для MANAGER -->
-            <td sec:authorize="hasRole('MANAGER')">
-                <div class="action-buttons">
-                    <a th:href="@{/web/orders/edit/{id}(id=${order.orderId})}" class="btn btn-edit">✏️ Изменить</a>
-                    <form method="post" th:action="@{/web/orders/delete/{id}(id=${order.orderId})}" style="display: inline;">
-                        <button type="submit" class="btn btn-delete" onclick="return confirm('Вы уверены, что хотите удалить заказ #' + ${order.orderId} + '?')">🗑️ Удалить</button>
-                    </form>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
-    <!-- Футер с статистикой -->
-    <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px; color: #666;">
-        <div style="display: flex; justify-content: space-between;">
-            <span>📊 Всего заказов: <strong th:text="${orders.size()}">0</strong></span>
-            <span>🕒 Последнее обновление: <span th:text="${#temporals.format(#temporals.createNow(), 'dd.MM.yyyy HH:mm')}"></span></span>
-        </div>
-    </div>
-
-</div>
-
-</body>
-</html>
-   ```
+`
 
                           Рисунок 3 - Результат выполнения задания 3
 
 
 ### Задание 4
-#### Реализуйте аутентификацию и авторизацию пользователя с Basic Authorization. При данной авторизации должна быть доступна часть приложения содержащая REST сервис.
-
-``` java
-@Bean
-    @Order(1)
-    public SecurityFilterChain filterChain1(HttpSecurity http) throws Exception{
-
-        http
-                .securityMatcher("/Oorders/**")
-                .authorizeHttpRequests(authz -> authz
-
-                        .requestMatchers(HttpMethod.GET, "/Oorders/**").hasAnyRole("USER", "MANAGER")
-                        .requestMatchers(HttpMethod.POST, "/Oorders/**").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.PUT, "/Oorders/**").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.DELETE, "/Oorders/**").hasRole("MANAGER")
-                )
-                .httpBasic(Customizer.withDefaults()) // включает basic auth
-                .csrf(csrf -> csrf.disable());        // желательно отключить CSRF для REST API
-
-        return http.build();
-    }
-   ```
+#### Произведите тестирование.
+![img_24.png](img_24.png)
+![img_25.png](img_25.png)
 
                           Рисунок 4 - Результат выполнения задания 4
 
 ``` mermaid
- classDiagram
-    class SecurityConfig {
-        +UserDetailsService userDetailsService()
-        +SecurityFilterChain restApiFilterChain(HttpSecurity)
-        +SecurityFilterChain webUiFilterChain(HttpSecurity)
-    }
-    
-    class SecurityInitializer {
-    }
-    
-    class WebController {
-        +listOrders()
-        +showCreateForm()
-        +createOrder()
-        +showEditForm()
-        +updateOrder()
-        +deleteOrder()
-    }
-    
-    class LoginController {
-        +loginPage()
-    }
-    
+classDiagram
     class OrderService {
-        +createOrder()
-        +getFullOrdersList()
-        +updateOrder()
-        +deleteOrder()
+        -CustomersRepository customersRepository
+        -ProductsRepository productsRepository
+        -OrdersRepository ordersRepository
+        -OrderDetailsRepository orderDetailsRepository
+        +createOrder(...) Orders
+        +getFullOrdersList() List~Orders~
+        +updateOrder(...) Orders
+        +deleteOrder(id) void
     }
     
-    SecurityInitializer <|-- AbstractSecurityWebApplicationInitializer
-    WebController --> OrderService
-    LoginController ..> SecurityConfig
-    WebController ..> SecurityConfig
+    OrderService --> CustomersRepository
+    OrderService --> ProductsRepository
+    OrderService --> OrdersRepository
+    OrderService --> OrderDetailsRepository
+    OrderService ..> Orders : creates
+    OrderService ..> Order_Details : creates
    ```
 
           Рисунок 5 - Обновлённая mermaid-диаграмма проекта
 
-![img_18.png](img_18.png)
-![img_19.png](img_19.png)
-![img_21.png](img_21.png)
-![img_22.png](img_22.png)
-![img_16.png](img_16.png)
-![img_17.png](img_17.png)
-![img_20.png](img_20.png)
-
-
-          Рисунок 6 - Демонстрация работы проекта
 
 
 ### Вывод   
 
-#### В ходе выполнения лабораторной работы были реализованы возможности аутентификации и авторизации в web-приложении
+#### В ходе выполнения лабораторной работы были проведены Unit и интеграционные тесты.

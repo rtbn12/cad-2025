@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -16,6 +17,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Properties;
 
 @Configuration
@@ -52,19 +55,15 @@ public class TestConfigDB {
         properties.put(Environment.DIALECT, "org.hibernate.dialect.H2Dialect");
         properties.put(Environment.FORMAT_SQL, true);
         properties.put(Environment.SHOW_SQL, true);
-        properties.put(Environment.MAX_FETCH_DEPTH, 3);
-        properties.put(Environment.STATEMENT_BATCH_SIZE, 10);
-        properties.put(Environment.STATEMENT_FETCH_SIZE, 50);
+        properties.put("hibernate.hbm2ddl.auto", "create-drop");
+        properties.put("javax.persistence.schema-generation.database.action", "drop-and-create");
         em.setJpaProperties(properties);
 
         return em;
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager(
-            @Autowired EntityManagerFactory entityManagerFactory) {
-        JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory);
-        return transactionManager;
+    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
+        return new JpaTransactionManager(emf);
     }
 }
