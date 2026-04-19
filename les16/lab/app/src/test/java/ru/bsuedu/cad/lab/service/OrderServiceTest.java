@@ -1,6 +1,7 @@
 package ru.bsuedu.cad.lab.service;
 
 
+import net.bytebuddy.build.ToStringPlugin;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -114,6 +116,36 @@ public class OrderServiceTest {
 
     }
 
+
+    @Test
+    void shouldThrowExceptionWhenProductNotFound() {
+
+        Long customerId = 1L;
+        Long nonExistentProductId = 999L;
+
+
+        Customers customer = mock(Customers.class);
+        when(customersRepository.findById(customerId)).thenReturn(Optional.of(customer));
+
+
+        when(productsRepository.findById(nonExistentProductId)).thenReturn(Optional.empty());
+
+
+        assertThrows(RuntimeException.class, () -> {
+            orderService.createOrder(
+                    customerId,
+                    LocalDateTime.now(),
+                    "norm",
+                    "BESTGRAD",
+                    nonExistentProductId,
+                    10L
+            );
+        });
+
+
+        Mockito.verify(ordersRepository, Mockito.never()).save(any(Orders.class));
+        Mockito.verify(orderDetailsRepository, Mockito.never()).save(any(Order_Details.class));
+    }
 
 
 
