@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Отправка сообщения</title>
+</head>
+<body>
+<h2>Опубликовать новое сообщение</h2>
+
+<!-- action="/messages" - куда отправляем, method="post" - как отправляем -->
+<form action="/messages" method="POST">
+    <input type="text" size="100" name="message" value="Введи сообщение" required>
+    <button type="submit">Отправить</button>
+</form>
+</body>
+</html>
