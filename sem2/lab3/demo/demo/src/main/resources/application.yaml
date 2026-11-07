@@ -1,0 +1,7 @@
+server:
+  port: 6767
+spring:
+  application:
+    name: demo
+  thymeleaf:
+    cache: false
