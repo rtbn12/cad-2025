@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Список задач медицинского сотрудника</title>
+    <link rel="stylesheet" th:href="@{/styles/TaskListStyle.css}">
+    <link rel="icon" th:href="@{/images/icon.ico}">
+</head>
+<body>
+
+<header>
+    <h1>Личный список задач медицинского сотрудника</h1>
+</header>
+
+<div class="table-container">
+    <table class="task-table">
+        <thead>
+        <tr>
+            <th>Номер</th>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Статус</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="task : ${tasks}">
+            <td th:text="${task.id}">1</td>
+            <td th:text="${task.title}">Название</td>
+            <td th:text="${task.description}">Описание</td>
+            <td th:text="${task.completed ? 'Выполнено' : 'В работе'}">В работе</td>
+            <td class="actions">
+                <a th:href="@{/deleteTask/{id}(id=${task.id})}" class="btn-delete">Удалить</a>
+
+                <form th:action="@{/updateTask/{id}(id=${task.id})}" method="post" style="display:inline;">
+                    <input type="hidden" name="completed" th:value="${!task.completed}">
+                    <button type="submit" class="btn-update"
+                            th:text="${task.completed ? 'Вернуть в работу' : 'Выполнить'}">
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="add-btn-container">
+    <a th:href="@{/addTaskPage}" class="btn-add">Добавить новую задачу</a>
+</div>
+
+</body>
+</html>

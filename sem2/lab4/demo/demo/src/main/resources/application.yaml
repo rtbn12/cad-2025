@@ -1,0 +1,28 @@
+server:
+  port: 6767
+
+spring:
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/medicalDatabase"
+    username: postgres
+    password: 1q2a3zwsx
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  sql:
+    init:
+      mode: never
+
+  application:
+    name: demo
+
+  thymeleaf:
+    cache: false

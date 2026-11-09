@@ -1,0 +1,295 @@
+/* ==========================================================================
+   1. Базовые настройки и сброс стилей
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+    background-color: #eef2f5; /* Очень светлый серо-голубой фон, стерильный */
+    color: #2c3e50; /* Темно-серый текст, мягче чем чисто черный */
+    line-height: 1.6;
+    padding-bottom: 40px;
+}
+
+/* ==========================================================================
+   2. Шапка сайта
+   ========================================================================== */
+header {
+    background-color: #ffffff;
+    padding: 25px 20px;
+    text-align: center;
+    border-bottom: 3px solid #2a6b9c; /* Медицинский синий акцент */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Легкая тень для объема */
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #2a6b9c;
+    letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   3. Типографика (Все виды заголовков)
+   ========================================================================== */
+h1, h2, h3, h4, h5, h6 {
+    color: #1a4f76;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+h1 { font-size: 26px; }
+h2 { font-size: 22px; }
+h3 { font-size: 18px; }
+h4 { font-size: 16px; }
+h5 { font-size: 14px; color: #555; text-transform: uppercase; }
+h6 { font-size: 13px; color: #777; }
+
+p {
+    margin-bottom: 15px;
+}
+
+a {
+    color: #2a6b9c;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: #1a4f76;
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   4. Контейнеры и карточки (для таблиц и форм)
+   ========================================================================== */
+.table-container, .form-container {
+    max-width: 1000px;
+    margin: 0 auto 30px auto;
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 8px; /* Скругляем углы, чтобы убрать излишнюю строгость */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04); /* Тень делает интерфейс современнее */
+}
+
+.form-container {
+    max-width: 600px; /* Форма добавления уже, чем таблица */
+}
+
+/* ==========================================================================
+   5. Таблица задач
+   ========================================================================== */
+.task-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.task-table th, .task-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e6ed;
+}
+
+.task-table th {
+    background-color: #f8fafc;
+    color: #4a5568;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #cbd5e0;
+}
+
+.task-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.task-table tbody tr:hover {
+    background-color: #f1f5f9; /* Легкая подсветка строки при наведении */
+}
+
+/* Центрирование текста в колонке с действиями */
+.actions {
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* ==========================================================================
+   6. Кнопки (Ссылки и Submit)
+   ========================================================================== */
+button, .btn-add, .btn-submit, .btn-cancel, .btn-update, .btn-delete {
+    display: inline-block;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    text-decoration: none;
+}
+
+/* Основная кнопка (Добавить, Подтвердить) */
+.btn-add, .btn-submit {
+    background-color: #2a6b9c;
+    color: #ffffff;
+    box-shadow: 0 2px 5px rgba(42, 107, 156, 0.2);
+}
+
+.btn-add:hover, .btn-submit:hover {
+    background-color: #1a4f76;
+    box-shadow: 0 4px 8px rgba(42, 107, 156, 0.3);
+    color: #ffffff;
+    text-decoration: none;
+}
+
+/* Кнопка удаления */
+.btn-delete {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 8px 14px;
+}
+
+.btn-delete:hover {
+    background-color: #f5c6cb;
+    color: #491217;
+    text-decoration: none;
+}
+
+/* Кнопка смены статуса */
+.btn-update {
+    background-color: #e2e8f0;
+    color: #2d3748;
+    border: 1px solid #cbd5e0;
+    padding: 8px 14px;
+}
+
+.btn-update:hover {
+    background-color: #cbd5e0;
+    color: #1a202c;
+}
+
+/* Кнопка отмены */
+.btn-cancel {
+    background-color: #ffffff;
+    color: #4a5568;
+    border: 1px solid #cbd5e0;
+}
+
+.btn-cancel:hover {
+    background-color: #f7fafc;
+    color: #2d3748;
+    text-decoration: none;
+}
+
+.add-btn-container {
+    text-align: center;
+    margin-top: 20px;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ==========================================================================
+   7. Формы и инпуты (Все популярные типы)
+   ========================================================================== */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #4a5568;
+}
+
+/* Общий стиль для всех текстовых полей */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+input[type="date"],
+textarea,
+select {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 14px;
+    color: #2c3e50;
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e0;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    font-family: inherit;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #2a6b9c;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(42, 107, 156, 0.15); /* Мягкое свечение при клике */
+}
+
+/* Специфичные типы инпутов */
+input[type="radio"],
+input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+input[type="file"] {
+    padding: 10px;
+    background-color: #f8fafc;
+    border: 1px dashed #cbd5e0;
+    border-radius: 5px;
+    width: 100%;
+}
+
+/* Плейсхолдер */
+::placeholder {
+    color: #a0aec0;
+    opacity: 1;
+}
+
+/* ==========================================================================
+   8. Специфичные элементы (Статусы)
+   ========================================================================== */
+/* Если захочешь обернуть текст статуса в span и задать ему класс */
+.status-completed {
+    color: #276749;
+    font-weight: 600;
+}
+
+.status-pending {
+    color: #975a16;
+    font-weight: 600;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    justify-content: flex-end; /* Кнопки прижимаются вправо */
+}
