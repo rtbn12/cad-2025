@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Регистрация пациента · Электронная регистратура</title>
+    <link rel="icon" th:href="@{/images/icon.ico}">
+    <link rel="stylesheet" th:href="@{/styles/RegistrationStyle.css}">
+</head>
+<body>
+<header class="topbar">
+    <div class="topbar-inner">
+        <a class="brand" th:href="@{/}">
+            <img th:src="@{/images/icon.ico}" alt="" width="36" height="36">
+            <h1>Электронная регистратура</h1>
+        </a>
+        <a class="login-link" th:href="@{/login}">Войти в аккаунт <span aria-hidden="true">↗</span></a>
+    </div>
+</header>
+<main class="form-container">
+    <div class="page-heading">
+        <h2>Регистрация пациента</h2>
+        <p>Создайте аккаунт, чтобы записываться на приём и управлять своими записями.</p>
+    </div>
+    <form class="registration-form" th:action="@{/registrationResult}"
+          th:object="${registrationForm}" method="post" aria-label="Регистрация пациента">
+        <div class="form-error" role="alert" th:if="${#fields.hasGlobalErrors()}">
+            <p th:each="error : ${#fields.globalErrors()}" th:text="${error}"></p>
+        </div>
+        <fieldset>
+            <legend>Личные данные</legend>
+            <div class="fields fields--personal">
+                    <div class="form-group field field--lastName">
+                        <label for="lastName">Фамилия</label>
+                        <input id="lastName" type="text" th:field="*{lastName}"
+                               autocomplete="family-name" required maxlength="100"
+                               aria-describedby="lastName-error"
+                               th:attr="aria-invalid=${#fields.hasErrors('lastName')}"
+                               th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid'">
+                        <p class="field-error" id="lastName-error" th:if="${#fields.hasErrors('lastName')}"
+                           th:errors="*{lastName}"></p>
+                    </div>
+                    <div class="form-group field field--firstName">
+                        <label for="firstName">Имя</label>
+                        <input id="firstName" type="text" th:field="*{firstName}"
+                               autocomplete="given-name" required maxlength="100"
+                               aria-describedby="firstName-error"
+                               th:attr="aria-invalid=${#fields.hasErrors('firstName')}"
+                               th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid'">
+                        <p class="field-error" id="firstName-error" th:if="${#fields.hasErrors('firstName')}"
+                           th:errors="*{firstName}"></p>
+                    </div>
+                    <div class="form-group field field--middleName">
+                        <label for="middleName">Отчество</label>
+                        <input id="middleName" type="text" th:field="*{middleName}"
+                               autocomplete="additional-name" maxlength="100"
+                               aria-describedby="middleName-error middleName-hint"
+                               th:attr="aria-invalid=${#fields.hasErrors('middleName')}"
+                               th:classappend="${#fields.hasErrors('middleName')} ? 'is-invalid'">
+                        <p class="hint" id="middleName-hint">Необязательно</p>
+                        <p class="field-error" id="middleName-error" th:if="${#fields.hasErrors('middleName')}"
+                           th:errors="*{middleName}"></p>
+                    </div>
+                    <div class="form-group field field--birthDate">
+                        <label for="birthDate">Дата рождения</label>
+                        <input id="birthDate" type="date" th:field="*{birthDate}"
+                               autocomplete="bday" required
+                               aria-describedby="birthDate-error"
+                               th:attr="aria-invalid=${#fields.hasErrors('birthDate')}"
+                               th:classappend="${#fields.hasErrors('birthDate')} ? 'is-invalid'">
+                        <p class="field-error" id="birthDate-error" th:if="${#fields.hasErrors('birthDate')}"
+                           th:errors="*{birthDate}"></p>
+                    </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>Контактные данные и полис</legend>
+            <div class="fields fields--contacts">
+                    <div class="form-group field field--omsNumber">
+                        <label for="omsNumber">Полис ОМС</label>
+                        <input id="omsNumber" type="text" th:field="*{omsNumber}"
+                               autocomplete="off" required inputmode="numeric" pattern="[0-9]{16}" minlength="16" maxlength="16"
+                               aria-describedby="omsNumber-error omsNumber-hint"
+                               th:attr="aria-invalid=${#fields.hasErrors('omsNumber')}"
+                               th:classappend="${#fields.hasErrors('omsNumber')} ? 'is-invalid'">
+                        <p class="hint" id="omsNumber-hint">16 цифр без пробелов и дефисов</p>
+                        <p class="field-error" id="omsNumber-error" th:if="${#fields.hasErrors('omsNumber')}"
+                           th:errors="*{omsNumber}"></p>
+                    </div>
+                    <div class="form-group field field--phone">
+                        <label for="phone">Телефон</label>
+                        <input id="phone" type="tel" th:field="*{phone}"
+                               autocomplete="tel" required pattern="\+7-[0-9]{3}-[0-9]{3}-[0-9]{2}-[0-9]{2}" maxlength="16" placeholder="+7-900-123-45-67"
+                               aria-describedby="phone-error phone-hint"
+                               th:attr="aria-invalid=${#fields.hasErrors('phone')}"
+                               th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid'">
+                        <p class="hint" id="phone-hint">В формате +7-900-123-45-67</p>
+                        <p class="field-error" id="phone-error" th:if="${#fields.hasErrors('phone')}"
+                           th:errors="*{phone}"></p>
+                    </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>Данные для входа</legend>
+            <div class="fields fields--account">
+                    <div class="form-group field field--login">
+                        <label for="login">Логин</label>
+                        <input id="login" type="text" th:field="*{login}"
+                               autocomplete="username" required maxlength="100" autocapitalize="none" spellcheck="false"
+                               aria-describedby="login-error login-hint"
+                               th:attr="aria-invalid=${#fields.hasErrors('login')}"
+                               th:classappend="${#fields.hasErrors('login')} ? 'is-invalid'">
+                        <p class="hint" id="login-hint">Будет использоваться для входа</p>
+                        <p class="field-error" id="login-error" th:if="${#fields.hasErrors('login')}"
+                           th:errors="*{login}"></p>
+                    </div>
+                    <div class="form-group field field--password">
+                        <label for="password">Пароль</label>
+                        <input id="password" type="password" th:field="*{password}"
+                               autocomplete="new-password" required
+                               aria-describedby="password-error"
+                               th:attr="aria-invalid=${#fields.hasErrors('password')}"
+                               th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'">
+                        <p class="field-error" id="password-error" th:if="${#fields.hasErrors('password')}"
+                           th:errors="*{password}"></p>
+                    </div>
+                    <div class="form-group field field--passwordConfirmation">
+                        <label for="passwordConfirmation">Повторите пароль</label>
+                        <input id="passwordConfirmation" type="password" th:field="*{passwordConfirmation}"
+                               autocomplete="new-password" required
+                               aria-describedby="passwordConfirmation-error"
+                               th:attr="aria-invalid=${#fields.hasErrors('passwordConfirmation')}"
+                               th:classappend="${#fields.hasErrors('passwordConfirmation')} ? 'is-invalid'">
+                        <p class="field-error" id="passwordConfirmation-error" th:if="${#fields.hasErrors('passwordConfirmation')}"
+                           th:errors="*{passwordConfirmation}"></p>
+                    </div>
+            </div>
+        </fieldset>
+        <footer class="form-footer">
+            <p>Уже зарегистрированы? <a th:href="@{/login}">Войти</a></p>
+            <button class="btn-submit" type="submit">Создать аккаунт <span aria-hidden="true">→</span></button>
+        </footer>
+    </form>
+</main>
+</body>
+</html>
