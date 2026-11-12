@@ -1,0 +1,80 @@
+/* Страница специальностей. Расширение утверждённой палитры RegistrationStyle.css. */
+.specialities-page { padding-bottom: 0; }
+.directory-header { text-align: left; padding: 22px 32px; margin: 0; }
+.directory-header-inner { max-width: 1180px; margin: auto; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+.directory-brand { display: inline-flex; align-items: center; gap: 12px; color: #1a4f76; text-decoration: none; font-size: 17px; font-weight: 600; line-height: 1.35; }
+.directory-brand img { flex-shrink: 0; }
+.directory-brand small { display: block; color: #4a5568; font-size: 12px; font-weight: 400; margin-top: 4px; }
+.cabinet-link { display: inline-flex; gap: 10px; align-items: center; font-size: 14px; text-decoration: none; padding: 9px 0; }
+.cabinet-link:hover { text-decoration: underline; }
+.directory-layout { max-width: 1244px; margin: auto; padding: 54px 32px 28px; display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 58px; }
+.eyebrow { color: #2a6b9c; font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.journey { padding-top: 6px; }
+.journey-steps { list-style: none; margin-top: 27px; }
+.journey-steps li { position: relative; display: flex; gap: 14px; padding-bottom: 30px; }
+.journey-steps li:not(:last-child)::after { content: ""; position: absolute; top: 40px; bottom: 7px; left: 19px; width: 1px; background: #cbd5e0; }
+.step-number { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid #cbd5e0; border-radius: 50%; color: #4a5568; font-size: 12px; flex-shrink: 0; background: #eef2f5; }
+.is-current .step-number { color: #ffffff; background: #2a6b9c; border-color: #2a6b9c; box-shadow: 0 0 0 5px rgba(42,107,156,.08); }
+.journey-steps strong { display: block; font-size: 14px; font-weight: 600; color: #4a5568; }
+.journey-steps div > span { display: block; font-size: 12px; color: #4a5568; margin-top: 2px; }
+.is-current strong { color: #1a4f76; }
+.journey-note { margin-top: 30px; border-top: 1px solid #cbd5e0; padding-top: 23px; display: flex; align-items: flex-start; gap: 12px; color: #4a5568; font-size: 12px; line-height: 1.8; }
+.note-symbol { color: #2a6b9c; font-size: 24px; font-weight: 400; line-height: 1; }
+.directory-heading { padding-bottom: 31px; }
+.directory-heading h1 { margin: 12px 0 18px; color: #1a4f76; font-size: clamp(32px, 4vw, 50px); font-weight: 600; letter-spacing: -.045em; line-height: 1.12; }
+.directory-heading h1 span { color: #2a6b9c; }
+.directory-intro { max-width: 510px; font-size: 14px; color: #4a5568; line-height: 1.8; }
+.speciality-panel { background: #ffffff; border: 1px solid #cbd5e0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,.04); }
+.panel-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 23px 26px; border-bottom: 1px solid #e2e8f0; }
+.panel-heading h2 { margin: 0; text-align: left; font-size: 17px; line-height: 1.4; }
+.count-badge { min-width: 30px; padding: 3px 9px; text-align: center; border: 1px solid #cbd5e0; border-radius: 5px; color: #2a6b9c; font-size: 12px; font-weight: 600; background: #f8fafc; }
+.speciality-grid { list-style: none; padding: 20px; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
+.speciality-card { min-width: 0; padding: 22px; border: 1px solid #e2e8f0; background: #f8fafc; border-radius: 5px; }
+.card-topline { display: flex; justify-content: space-between; align-items: center; margin-bottom: 23px; }
+.medical-mark { display: inline-flex; align-items: center; justify-content: center; width: 35px; height: 35px; border: 1px solid #cbd5e0; border-radius: 5px; color: #2a6b9c; background: #ffffff; font-size: 25px; line-height: 1; }
+.card-index { color: #4a5568; font-size: 11px; letter-spacing: .1em; }
+.speciality-card h3 { color: #1a4f76; font-size: 18px; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
+.speciality-card p { color: #4a5568; font-size: 12px; margin-top: 6px; }
+.speciality-card:has(.speciality-card-link) { padding: 0; background: #ffffff; }
+.speciality-card-link { display: block; height: 100%; padding: 22px; text-decoration: none; border-radius: 5px; background: #f8fafc; transition: background-color .2s, box-shadow .2s; }
+.speciality-card-link:hover { background: #ffffff; box-shadow: inset 0 0 0 1px #2a6b9c; }
+.speciality-card-link:focus-visible { outline: 3px solid #2a6b9c; outline-offset: 3px; }
+.speciality-link-caption { display: flex; justify-content: space-between; align-items: center; gap: 12px; border-top: 1px solid #e2e8f0; padding-top: 14px; margin-top: 22px; color: #2a6b9c; font-size: 12px; font-weight: 600; }
+.speciality-link-caption > span { font-size: 18px; line-height: 1; }
+@media (prefers-reduced-motion: reduce) { .speciality-card-link { transition: none; } }
+.empty-state { text-align: center; padding: 49px 24px 54px; }
+.empty-symbol { display: inline-flex; width: 60px; height: 60px; align-items: center; justify-content: center; color: #2a6b9c; border: 1px solid #cbd5e0; border-radius: 50%; font-size: 38px; background: #f8fafc; margin-bottom: 20px; }
+.empty-state h3 { color: #1a4f76; font-size: 22px; font-weight: 600; }
+.empty-state p { color: #4a5568; font-size: 14px; margin-top: 10px; }
+.empty-back { display: inline-block; margin-top: 26px; font-size: 14px; text-underline-offset: 4px; }
+.empty-back span { margin-left: 8px; }
+.directory-footer { display: flex; justify-content: space-between; gap: 18px; color: #4a5568; font-size: 11px; margin-top: 24px; }
+@media (max-width: 900px) { .directory-layout { grid-template-columns: 190px minmax(0,1fr); gap: 28px; } .speciality-card { padding: 18px; } }
+@media (max-width: 700px) {
+    .directory-header { padding: 17px 20px; }
+    .directory-brand { font-size: 14px; }
+    .cabinet-link { font-size: 12px; }
+    .directory-layout { display: block; padding: 25px 20px; }
+    .journey > .eyebrow, .journey-note, .journey-steps div > span { display: none; }
+    .journey { padding: 0; margin-bottom: 32px; }
+    .journey-steps { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8px; margin: 0; }
+    .journey-steps li { display: flex; flex-direction: column; align-items: center; gap: 9px; padding: 0; text-align: center; }
+    .journey-steps li:not(:last-child)::after { top: 19px; left: calc(50% + 26px); right: calc(-50% + 18px); width: auto; height: 1px; bottom: auto; }
+    .journey-steps strong { font-size: 10px; font-weight: 500; }
+    .step-number { width: 36px; height: 36px; }
+    .panel-heading { padding: 20px; }
+    .panel-heading h2 { font-size: 16px; }
+    .speciality-grid { padding: 14px; gap: 12px; }
+    .directory-footer { flex-direction: column; gap: 4px; }
+}
+@media (max-width: 420px) {
+    .directory-header-inner { gap: 12px; }
+    .directory-brand { gap: 8px; font-size: 12px; }
+    .directory-brand img { width: 30px; height: 30px; }
+    .directory-brand small { font-size: 10px; }
+    .cabinet-link { max-width: 85px; line-height: 1.4; }
+    .directory-layout { padding-left: 16px; padding-right: 16px; }
+    .speciality-grid { grid-template-columns: 1fr; }
+    .speciality-card { padding: 20px; }
+    .card-topline { margin-bottom: 14px; }
+}

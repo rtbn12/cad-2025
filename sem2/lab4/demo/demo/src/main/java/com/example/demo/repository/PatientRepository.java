@@ -8,4 +8,8 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
 
     Optional<Patient> findByUser_Id(Long userId);
 
+    boolean existsByOmsNumber(String omsNumber);
+
+    boolean existsByPhone(String phone);
+
 }

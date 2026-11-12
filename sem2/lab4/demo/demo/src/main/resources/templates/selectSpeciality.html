@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Специальности · Электронная регистратура</title>
+    <link rel="icon" th:href="@{/images/icon.ico}">
+    <link rel="stylesheet" th:href="@{/styles/RegistrationStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/SpecialityStyle.css}">
+</head>
+<body class="specialities-page">
+<header class="directory-header">
+    <div class="directory-header-inner">
+        <a class="directory-brand" th:href="@{/}">
+            <img th:src="@{/images/icon.ico}" width="38" height="38" alt="">
+            <span>Электронная регистратура<small>Запись на приём</small></span>
+        </a>
+        <a class="cabinet-link" th:href="@{/}"><span aria-hidden="true">←</span> Личный кабинет</a>
+    </div>
+</header>
+<main class="directory-layout">
+    <aside class="journey" aria-label="Этапы записи на приём">
+        <p class="eyebrow">Запись на приём</p>
+        <ol class="journey-steps">
+            <li class="is-current" aria-current="step"><span class="step-number">01</span><div><strong>Специальность</strong><span>Нужное направление</span></div></li>
+            <li><span class="step-number">02</span><div><strong>Врач</strong><span>Выбор специалиста</span></div></li>
+            <li><span class="step-number">03</span><div><strong>Дата и время</strong><span>Удобное посещение</span></div></li>
+            <li><span class="step-number">04</span><div><strong>Подтверждение</strong><span>Детали записи</span></div></li>
+        </ol>
+        <div class="journey-note"><span class="note-symbol" aria-hidden="true">+</span><p>Начните с направления.<br>Затем — врач и удобное время.</p></div>
+    </aside>
+    <section class="directory-content" aria-labelledby="page-title">
+        <div class="directory-heading">
+            <p class="eyebrow">Шаг 01 / 04</p>
+            <h1 id="page-title">С заботой о вашем<br><span>здоровье.</span></h1>
+            <p class="directory-intro">Первый шаг — найти нужное медицинское направление. Здесь собраны специальности нашей регистратуры.</p>
+        </div>
+        <section class="speciality-panel" aria-labelledby="specialities-title">
+            <div class="panel-heading"><h2 id="specialities-title">Медицинские специальности</h2><span class="count-badge" th:text="${#lists.size(listDto)}" aria-label="Количество специальностей">0</span></div>
+            <ul class="speciality-grid" th:unless="${#lists.isEmpty(listDto)}">
+                <li class="speciality-card" th:each="speciality, item : ${listDto}">
+                    <a class="speciality-card-link" th:href="@{/cabinet/createAppointment/setDoctor(specialityId=${speciality.id})}">
+                    <div class="card-topline"><span class="medical-mark" aria-hidden="true">+</span><span class="card-index" aria-hidden="true" th:text="${item.count < 10 ? '0' + item.count : item.count}">01</span></div>
+                    <h3 th:text="${speciality.specialityName}">Название специальности</h3>
+                    <p>Медицинское направление</p>
+                    <span class="speciality-link-caption">Посмотреть врачей <span aria-hidden="true">→</span></span>
+                    </a>
+                </li>
+            </ul>
+            <div class="empty-state" th:if="${#lists.isEmpty(listDto)}" role="status">
+                <span class="empty-symbol" aria-hidden="true">+</span>
+                <h3>Список пока пуст</h3>
+                <p>Специальности ещё не добавлены.<br>Уточните доступные направления в регистратуре.</p>
+                <a class="empty-back" th:href="@{/}">Вернуться в личный кабинет <span aria-hidden="true">↗</span></a>
+            </div>
+        </section>
+        <div class="directory-footer"><span>Электронная регистратура</span><span>Ваше здоровье — в центре внимания</span></div>
+    </section>
+</main>
+</body>
+</html>
