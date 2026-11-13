@@ -1,0 +1,43 @@
+/* Доступные даты: общая палитра и нативный выбор без JavaScript. */
+.chosen-doctor { display: flex; align-items: center; gap: 20px; border: 1px solid #cbd5e0; border-left: 3px solid #2a6b9c; background: #ffffff; border-radius: 8px; padding: 22px 26px; margin-bottom: 22px; }
+.chosen-doctor .doctor-avatar { width: 58px; height: 64px; font-size: 22px; }
+.chosen-doctor h2 { text-align: left; font-size: 18px; margin: 0; line-height: 1.45; overflow-wrap: anywhere; }
+.chosen-doctor .doctor-speciality { margin-top: 5px; }
+.change-doctor { flex-shrink: 0; font-size: 12px; text-underline-offset: 4px; }
+.change-doctor span { margin-left: 7px; }
+.dates-fieldset { border: 0; padding: 22px; min-width: 0; }
+.date-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
+.date-option { position: relative; margin: 0; cursor: pointer; min-width: 0; }
+.date-option input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.date-tile { position: relative; display: flex; flex-direction: column; padding: 18px 16px 16px; border: 1px solid #cbd5e0; border-radius: 5px; background: #f8fafc; transition: border-color .2s, background-color .2s; }
+.date-weekday { font-size: 11px; color: #4a5568; text-transform: capitalize; }
+.date-number { margin: 4px 0 0; font-size: 38px; font-weight: 500; line-height: 1.25; letter-spacing: -.05em; color: #1a4f76; }
+.date-month { font-size: 12px; color: #4a5568; }
+.date-availability { display: flex; gap: 5px; align-items: center; font-size: 10px; margin-top: 15px; color: #2a6b9c; border-top: 1px solid #e2e8f0; padding-top: 10px; }
+.date-availability > span { font-size: 20px; line-height: 10px; }
+.date-check { position: absolute; right: 14px; top: 13px; display: none; color: #2a6b9c; }
+.date-option:hover .date-tile { border-color: #2a6b9c; background: #ffffff; }
+.date-option input:checked + .date-tile { border-color: #2a6b9c; background: #ffffff; box-shadow: inset 0 0 0 1px #2a6b9c; }
+.date-option input:checked + .date-tile .date-check { display: block; }
+.date-option input:focus-visible + .date-tile { outline: 3px solid #2a6b9c; outline-offset: 3px; }
+.date-actions { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 24px 0 5px; font-size: 13px; }
+.cancel-booking { color: #4a5568; text-underline-offset: 4px; }
+.return-to-doctors { text-decoration: none; }
+.return-to-doctors:hover { text-decoration: underline; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.booking-cancel { margin-top: 22px; display: flex; justify-content: flex-end; font-size: 13px; }
+.doctor-date-link { display: inline-flex; gap: 10px; align-items: center; padding: 9px 13px; border: 1px solid #cbd5e0; border-radius: 5px; color: #2a6b9c; background: #f8fafc; text-decoration: none; font-size: 12px; flex-shrink: 0; }
+.doctor-date-link:hover { color: #ffffff; background: #2a6b9c; border-color: #2a6b9c; }
+@media (max-width: 1000px) { .doctor-date-link { align-self: flex-end; } .doctor-card { flex-wrap: wrap; } .doctor-date-link { margin-left: auto; } }
+@media (max-width: 900px) { .date-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .chosen-doctor { flex-wrap: wrap; } .change-doctor { margin-left: auto; } }
+@media (max-width: 700px) {
+    .journey-steps { grid-template-columns: repeat(5,minmax(0,1fr)); gap: 4px; }
+    .journey-steps strong { font-size: 9px; overflow-wrap: anywhere; }
+    .step-number { width: 32px; height: 32px; font-size: 11px; }
+    .journey-steps li:not(:last-child)::after { top: 16px; left: calc(50% + 21px); right: calc(-50% + 17px); }
+    .chosen-doctor { padding: 20px; gap: 14px; }
+    .chosen-doctor h2 { font-size: 16px; }
+    .dates-fieldset { padding: 15px; }
+}
+@media (max-width: 420px) { .date-tile { padding: 16px 12px 12px; } .date-number { font-size: 34px; } .date-availability { font-size: 9px; gap: 3px; } .date-actions { font-size: 12px; gap: 12px; } }
+@media (prefers-reduced-motion: reduce) { .date-tile { transition: none; } }

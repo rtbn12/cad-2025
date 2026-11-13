@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Маршрут не найден · Электронная регистратура</title>
+    <link rel="icon" th:href="@{/images/icon.ico}">
+    <link rel="stylesheet" th:href="@{/styles/RegistrationStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/SpecialityStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/ErrorStyle.css}">
+</head>
+<body>
+<header class="directory-header"><div class="directory-header-inner">
+    <a class="directory-brand" th:href="@{/}"><img th:src="@{/images/icon.ico}" width="38" height="38" alt=""><span>Электронная регистратура<small>Поможем найти нужный путь</small></span></a>
+    <a class="cabinet-link" th:href="@{/}">Личный кабинет <span aria-hidden="true">↗</span></a>
+</div></header>
+<main class="error-layout" th:attr="data-error-path=${path}">
+    <section class="error-card" aria-labelledby="error-title">
+        <div class="error-art" aria-hidden="true"><span class="art-label">МАРШРУТ НЕ НАЙДЕН</span><div class="error-code">4<span>+</span>4</div><div class="route-line"><i></i><span></span><i></i><span class="route-dashed"></span><b>?</b></div><span class="art-footnote">ВЕРНЁМСЯ НА ЗНАКОМЫЙ ПУТЬ</span></div>
+        <div class="error-content">
+            <p class="eyebrow">Ошибка 404 · Страница не найдена</p>
+            <h1 id="error-title">Кажется, этот маршрут<br><span>ещё не проложен.</span></h1>
+            <p class="error-description" th:if="${path == '/cabinet/createAppointment/setDoctor'}">Такой специальности не нашлось. Вернитесь к списку направлений — там все доступные варианты.</p>
+            <p class="error-description" th:if="${path == '/cabinet/createAppointment/setDate'}">Такого врача не нашлось. Вернитесь к выбору специалиста и продолжите запись.</p>
+            <p class="error-description" th:unless="${path == '/cabinet/createAppointment/setDoctor' or path == '/cabinet/createAppointment/setDate'}">Возможно, ссылка устарела или в адрес закралась опечатка. Нужное направление можно найти в списке специальностей.</p>
+            <p class="error-aside">Если вы исследовали адресную строку — любопытство одобряем. Но к врачу лучше по указателям.</p>
+            <div class="error-actions"><a id="error-back" class="error-primary" th:href="@{/cabinet/createAppointment/setSpeciality}"><span aria-hidden="true">←</span> <span id="error-back-label">К специальностям</span></a><a class="error-secondary" th:href="@{/}">В личный кабинет <span aria-hidden="true">↗</span></a></div>
+        </div>
+    </section>
+    <div class="directory-footer"><span>Электронная регистратура</span><span>Даже если свернули не туда — мы рядом</span></div>
+</main>
+<script th:src="@{/scripts/BookingNavigation.js}" defer></script>
+</body>
+</html>
