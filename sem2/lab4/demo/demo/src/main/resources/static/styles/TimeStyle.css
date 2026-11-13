@@ -1,0 +1,38 @@
+.time-panel-heading h2 { font-size: 24px; letter-spacing: -.025em; }
+.change-date { font-size: 12px; flex-shrink: 0; text-underline-offset: 4px; }
+.change-date span { margin-left: 7px; }
+.time-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 20px 26px 0; font-size: 11px; color: #4a5568; }
+.time-legend > span { display: inline-flex; align-items: center; gap: 7px; }
+.time-legend i { width: 8px; height: 8px; border-radius: 50%; border: 1px solid #2a6b9c; }
+.time-legend .legend-unavailable { background: #e2e8f0; border-color: #a0aec0; }
+.time-legend .duration-label { margin-left: auto; }
+.times-fieldset { border: 0; padding: 22px 26px 26px; min-width: 0; }
+.time-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; }
+.time-option { margin: 0; position: relative; min-width: 0; cursor: pointer; }
+.time-option input { opacity: 0; position: absolute; width: 1px; height: 1px; }
+.time-tile { display: flex; flex-direction: column; padding: 17px 15px 13px; border: 1px solid #cbd5e0; border-radius: 5px; background: #f8fafc; transition: background-color .2s,border-color .2s; }
+.time-top { display: flex; justify-content: space-between; align-items: center; gap: 5px; }
+.time-start { font-size: 26px; color: #1a4f76; font-weight: 500; letter-spacing: -.04em; }
+.time-end { font-size: 12px; color: #4a5568; margin-top: 1px; }
+.time-state { font-size: 10px; color: #2a6b9c; border-top: 1px solid #e2e8f0; margin-top: 15px; padding-top: 9px; }
+.time-indicator { color: #2a6b9c; visibility: hidden; font-size: 13px; }
+.time-option:not(.is-unavailable):hover .time-tile { background: #ffffff; border-color: #2a6b9c; }
+.time-option input:checked + .time-tile { background: #ffffff; border-color: #2a6b9c; box-shadow: inset 0 0 0 1px #2a6b9c; }
+.time-option input:checked + .time-tile .time-indicator { visibility: visible; }
+.time-option input:focus-visible + .time-tile { outline: 3px solid #2a6b9c; outline-offset: 3px; }
+.is-unavailable { cursor: not-allowed; }
+.is-unavailable .time-tile { background: #e2e8f0; border-color: #cbd5e0; }
+.is-unavailable .time-start { color: #4a5568; text-decoration: line-through; text-decoration-thickness: 1px; }
+.is-unavailable .time-state { color: #4a5568; border-color: #cbd5e0; }
+.no-free-times { margin: 20px 26px 0; border-left: 3px solid #2a6b9c; background: #f8fafc; padding: 13px 16px; color: #4a5568; font-size: 12px; }
+.no-free-times strong { color: #1a4f76; font-weight: 600; }
+.no-free-times p { margin-top: 4px; }
+.return-to-dates { text-decoration: none; }
+.return-to-dates:hover { text-decoration: underline; }
+.date-continue { display: flex; justify-content: flex-end; padding: 0 22px 22px; }
+.date-continue button { padding: 12px 19px; background: #2a6b9c; color: #ffffff; border: 0; border-radius: 5px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+.date-continue button:hover { background: #1a4f76; }
+@media(max-width:1000px) { .time-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } }
+@media(max-width:700px) { .time-legend { padding: 18px 20px 0; } .times-fieldset { padding: 20px; } .time-legend .duration-label { width: 100%; margin-left: 0; } }
+@media(max-width:420px) { .time-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 11px; } .time-tile { padding: 16px 14px 12px; } .time-panel-heading { padding: 20px; } .time-panel-heading h2 { font-size: 22px; } .change-date { font-size: 11px; } .no-free-times { margin-left: 20px; margin-right: 20px; } }
+@media(prefers-reduced-motion:reduce) { .time-tile { transition: none; } }

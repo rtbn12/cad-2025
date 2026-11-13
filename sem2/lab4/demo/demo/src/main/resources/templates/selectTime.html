@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Время приёма · Электронная регистратура</title>
+    <link rel="icon" th:href="@{/images/icon.ico}">
+    <link rel="stylesheet" th:href="@{/styles/RegistrationStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/SpecialityStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/DoctorStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/DateStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/TimeStyle.css}">
+</head>
+<body class="specialities-page doctors-page times-page">
+<header class="directory-header"><div class="directory-header-inner">
+    <a class="directory-brand" th:href="@{/}"><img th:src="@{/images/icon.ico}" width="38" height="38" alt=""><span>Электронная регистратура<small>Запись на приём</small></span></a>
+    <a class="cabinet-link" th:href="@{/}"><span aria-hidden="true">←</span> Личный кабинет</a>
+</div></header>
+<main class="directory-layout" th:attr="data-booking-speciality=${timeView.selectDoctorSpecialityId},data-booking-doctor=${timeView.selectDoctorId}">
+    <aside class="journey" aria-label="Этапы записи на приём">
+        <p class="eyebrow">Запись на приём</p>
+        <ol class="journey-steps">
+            <li class="is-complete"><a class="completed-step" th:href="@{/cabinet/createAppointment/setSpeciality}"><span class="step-number" aria-hidden="true">✓</span><div><strong>Специальность</strong><span>Направление выбрано</span></div></a></li>
+            <li class="is-complete"><a class="completed-step" th:href="@{/cabinet/createAppointment/setDoctor(specialityId=${timeView.selectDoctorSpecialityId})}"><span class="step-number" aria-hidden="true">✓</span><div><strong>Врач</strong><span>Специалист выбран</span></div></a></li>
+            <li class="is-complete"><a class="completed-step" th:href="@{/cabinet/createAppointment/setDate(selectDoctorId=${timeView.selectDoctorId})}"><span class="step-number" aria-hidden="true">✓</span><div><strong>Дата</strong><span th:text="${#temporals.format(timeView.selectDate,'dd.MM.yyyy')}">Дата выбрана</span></div></a></li>
+            <li class="is-current" aria-current="step"><span class="step-number">04</span><div><strong>Время</strong><span>Удобный момент</span></div></li>
+            <li><span class="step-number">05</span><div><strong>Подтверждение</strong><span>Детали записи</span></div></li>
+        </ol>
+        <div class="selected-direction"><p class="eyebrow">Ваше направление</p><strong th:text="${timeView.selectSpecialityName}">Специальность</strong><a th:href="@{/cabinet/createAppointment/setSpeciality}">Изменить <span aria-hidden="true">↗</span></a></div>
+    </aside>
+    <section class="directory-content" aria-labelledby="page-title">
+        <div class="directory-heading">
+            <a class="back-to-directions" th:href="@{/cabinet/createAppointment/setDate(selectDoctorId=${timeView.selectDoctorId})}"><span aria-hidden="true">←</span> К выбору даты</a>
+            <p class="eyebrow">Шаг 04 / 05</p>
+            <h1 id="page-title">Время для вас.<br><span>Без лишней спешки.</span></h1>
+            <p class="directory-intro">Выберите удобный получасовой интервал. Занятые и уже прошедшие слоты видны в расписании, но недоступны для выбора.</p>
+        </div>
+        <section class="chosen-doctor" aria-label="Выбранный врач">
+            <div class="doctor-avatar" aria-hidden="true" th:text="${#strings.substring(timeView.selectDoctorLastName,0,1) + #strings.substring(timeView.selectDoctorFirstName,0,1)}">ИИ</div>
+            <div class="doctor-details"><p class="doctor-caption">Ваш врач</p><h2><span th:text="${timeView.selectDoctorLastName}">Фамилия</span> <span th:text="${timeView.selectDoctorFirstName}">Имя</span><th:block th:if="${not #strings.isEmpty(timeView.selectDoctorMiddleName)}"> <span th:text="${timeView.selectDoctorMiddleName}">Отчество</span></th:block></h2><p class="doctor-speciality" th:text="${timeView.selectSpecialityName}">Специальность</p></div>
+            <a class="change-doctor" th:href="@{/cabinet/createAppointment/setDoctor(specialityId=${timeView.selectDoctorSpecialityId})}">Другой врач <span aria-hidden="true">↗</span></a>
+        </section>
+        <section class="speciality-panel" aria-labelledby="times-title">
+            <div class="panel-heading time-panel-heading"><div><p class="panel-kicker">Время приёма</p><h2 id="times-title" th:text="${#temporals.format(timeView.selectDate,'dd.MM.yyyy')}">Дата посещения</h2></div><a class="change-date" th:href="@{/cabinet/createAppointment/setDate(selectDoctorId=${timeView.selectDoctorId})}">Изменить дату <span aria-hidden="true">↗</span></a></div>
+            <div class="time-legend"><span><i class="legend-free" aria-hidden="true"></i>Свободно</span><span><i class="legend-unavailable" aria-hidden="true"></i>Недоступно</span><span class="duration-label">30 минут на приём</span></div>
+            <div class="no-free-times" role="status" th:if="${#lists.isEmpty(timeView.timeSlots.?[available])}"><strong>На этот день свободного времени уже нет.</strong><p>Выберите другую дату или посмотрите расписание другого врача.</p></div>
+            <fieldset class="times-fieldset">
+                <legend class="visually-hidden">Выберите время приёма</legend>
+                <div class="time-grid">
+                    <label class="time-option" th:each="slot : ${timeView.timeSlots}" th:classappend="${not slot.available} ? 'is-unavailable'">
+                        <input type="radio" name="slotId" th:value="${slot.slotId}" th:disabled="${not slot.available}" th:attr="aria-label=${#temporals.format(slot.start,'HH:mm') + ' — ' + #temporals.format(slot.end,'HH:mm')}">
+                        <span class="time-tile"><span class="time-top"><span class="time-start" th:text="${#temporals.format(slot.start,'HH:mm')}">09:00</span><span class="time-indicator" aria-hidden="true">✓</span></span><span class="time-end" th:text="${'до ' + #temporals.format(slot.end,'HH:mm')}">до 09:30</span><span class="time-state" th:text="${slot.available ? 'Свободно' : (slot.status.name() == 'BOOKED' ? 'Занято' : 'Время прошло')}">Свободно</span></span>
+                    </label>
+                </div>
+            </fieldset>
+            <div class="doctors-panel-footer"><span class="footer-cross" aria-hidden="true">+</span><p>Выбор времени ещё не бронирует слот. Запись появится после окончательного подтверждения.</p></div>
+        </section>
+        <div class="date-actions"><a class="return-to-dates" th:href="@{/cabinet/createAppointment/setDate(selectDoctorId=${timeView.selectDoctorId})}">← Вернуться к датам</a><a class="cancel-booking" th:href="@{/}">Прервать запись</a></div>
+        <div class="directory-footer"><span>Электронная регистратура</span><span>Ваше здоровье — в центре внимания</span></div>
+    </section>
+</main>
+<script th:src="@{/scripts/BookingNavigation.js}" defer></script>
+</body>
+</html>

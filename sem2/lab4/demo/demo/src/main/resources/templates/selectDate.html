@@ -9,13 +9,14 @@
     <link rel="stylesheet" th:href="@{/styles/SpecialityStyle.css}">
     <link rel="stylesheet" th:href="@{/styles/DoctorStyle.css}">
     <link rel="stylesheet" th:href="@{/styles/DateStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/TimeStyle.css}">
 </head>
 <body class="specialities-page doctors-page dates-page">
 <header class="directory-header"><div class="directory-header-inner">
     <a class="directory-brand" th:href="@{/}"><img th:src="@{/images/icon.ico}" width="38" height="38" alt=""><span>Электронная регистратура<small>Запись на приём</small></span></a>
     <a class="cabinet-link" th:href="@{/}"><span aria-hidden="true">←</span> Личный кабинет</a>
 </div></header>
-<main class="directory-layout" th:attr="data-booking-speciality=${dateView.selectSpecialityId}">
+<main class="directory-layout" th:attr="data-booking-speciality=${dateView.selectSpecialityId},data-booking-doctor=${dateView.doctorId}">
     <aside class="journey" aria-label="Этапы записи на приём">
         <p class="eyebrow">Запись на приём</p>
         <ol class="journey-steps">
@@ -41,15 +42,19 @@
         </section>
         <section class="speciality-panel dates-panel" aria-labelledby="dates-title">
             <div class="panel-heading"><div><p class="panel-kicker">Расписание приёма</p><h2 id="dates-title">Доступные даты</h2></div><span class="count-badge" th:text="${#lists.size(dateView.dataViews)}" aria-label="Количество доступных дат">0</span></div>
+            <form th:unless="${#lists.isEmpty(dateView.dataViews)}" th:action="@{/cabinet/createAppointment/setTime}" method="get">
+                <input type="hidden" name="selectDoctorId" th:value="${dateView.doctorId}">
             <fieldset th:with="months=${ {'января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'} }, weekdays=${ {'понедельник','вторник','среда','четверг','пятница','суббота','воскресенье'} }" class="dates-fieldset" th:unless="${#lists.isEmpty(dateView.dataViews)}">
                 <legend class="visually-hidden">Выберите дату посещения</legend>
                 <div class="date-grid">
                     <label class="date-option" th:each="day : ${dateView.dataViews}">
-                        <input type="radio" name="date" th:value="${day.dateSlot}" th:attr="aria-label=${#temporals.format(day.dateSlot, 'dd.MM.yyyy')}">
+                        <input type="radio" name="selectDate" required th:value="${day.dateSlot}" th:attr="aria-label=${#temporals.format(day.dateSlot, 'dd.MM.yyyy')}">
                         <span class="date-tile"><span class="date-weekday" th:text="${weekdays[day.dateSlot.dayOfWeek.value - 1]}">Понедельник</span><span class="date-number" th:text="${#temporals.format(day.dateSlot, 'dd')}">16</span><span class="date-month" th:text="${months[day.dateSlot.monthValue - 1] + ' ' + day.dateSlot.year}">ноября 2026</span><span class="date-availability"><span aria-hidden="true">·</span> Есть свободное время</span><span class="date-check" aria-hidden="true">✓</span></span>
                     </label>
                 </div>
             </fieldset>
+            <div class="date-continue"><button type="submit">Выбрать время <span aria-hidden="true">→</span></button></div>
+            </form>
             <div class="empty-state" th:if="${#lists.isEmpty(dateView.dataViews)}" role="status"><span class="empty-symbol" aria-hidden="true">+</span><h3>Свободных дат пока нет</h3><p>У выбранного врача нет доступных будущих слотов.<br>Посмотрите расписание другого специалиста этого направления.</p><a class="empty-back" th:href="@{/cabinet/createAppointment/setDoctor(specialityId=${dateView.selectSpecialityId})}">Выбрать другого врача <span aria-hidden="true">↗</span></a></div>
             <div class="doctors-panel-footer" th:unless="${#lists.isEmpty(dateView.dataViews)}"><span class="footer-cross" aria-hidden="true">+</span><p>Доступность может измениться. Запись создаётся только после окончательного подтверждения.</p></div>
         </section>

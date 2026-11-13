@@ -22,7 +22,8 @@
             <h1 id="error-title">Кажется, этот маршрут<br><span>ещё не проложен.</span></h1>
             <p class="error-description" th:if="${path == '/cabinet/createAppointment/setDoctor'}">Такой специальности не нашлось. Вернитесь к списку направлений — там все доступные варианты.</p>
             <p class="error-description" th:if="${path == '/cabinet/createAppointment/setDate'}">Такого врача не нашлось. Вернитесь к выбору специалиста и продолжите запись.</p>
-            <p class="error-description" th:unless="${path == '/cabinet/createAppointment/setDoctor' or path == '/cabinet/createAppointment/setDate'}">Возможно, ссылка устарела или в адрес закралась опечатка. Нужное направление можно найти в списке специальностей.</p>
+            <p class="error-description" th:if="${path == '/cabinet/createAppointment/setTime'}">Врач или дата не найдены. Возможно, адрес изменился или на выбранный день нет расписания. Вернитесь к выбору доступной даты.</p>
+            <p class="error-description" th:unless="${path == '/cabinet/createAppointment/setDoctor' or path == '/cabinet/createAppointment/setDate' or path == '/cabinet/createAppointment/setTime'}">Возможно, ссылка устарела или в адрес закралась опечатка. Нужное направление можно найти в списке специальностей.</p>
             <p class="error-aside">Если вы исследовали адресную строку — любопытство одобряем. Но к врачу лучше по указателям.</p>
             <div class="error-actions"><a id="error-back" class="error-primary" th:href="@{/cabinet/createAppointment/setSpeciality}"><span aria-hidden="true">←</span> <span id="error-back-label">К специальностям</span></a><a class="error-secondary" th:href="@{/}">В личный кабинет <span aria-hidden="true">↗</span></a></div>
         </div>
