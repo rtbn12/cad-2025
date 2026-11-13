@@ -8,6 +8,7 @@
     <link rel="stylesheet" th:href="@{/styles/RegistrationStyle.css}">
     <link rel="stylesheet" th:href="@{/styles/SpecialityStyle.css}">
     <link rel="stylesheet" th:href="@{/styles/DoctorStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/DateStyle.css}">
 </head>
 <body class="specialities-page doctors-page">
 <header class="directory-header">
@@ -19,14 +20,15 @@
         <a class="cabinet-link" th:href="@{/}"><span aria-hidden="true">←</span> Личный кабинет</a>
     </div>
 </header>
-<main class="directory-layout">
+<main class="directory-layout" th:attr="data-booking-speciality=${doctorsViews.specialityId}">
     <aside class="journey" aria-label="Этапы записи на приём">
         <p class="eyebrow">Запись на приём</p>
         <ol class="journey-steps">
             <li class="is-complete"><a class="completed-step" th:href="@{/cabinet/createAppointment/setSpeciality}"><span class="step-number" aria-hidden="true">✓</span><div><strong>Специальность</strong><span>Направление выбрано</span></div></a></li>
             <li class="is-current" aria-current="step"><span class="step-number">02</span><div><strong>Врач</strong><span>Выбор специалиста</span></div></li>
-            <li><span class="step-number">03</span><div><strong>Дата и время</strong><span>Удобное посещение</span></div></li>
-            <li><span class="step-number">04</span><div><strong>Подтверждение</strong><span>Детали записи</span></div></li>
+            <li><span class="step-number">03</span><div><strong>Дата</strong><span>Удобный день</span></div></li>
+            <li><span class="step-number">04</span><div><strong>Время</strong><span>Свободный слот</span></div></li>
+            <li><span class="step-number">05</span><div><strong>Подтверждение</strong><span>Детали записи</span></div></li>
         </ol>
         <div class="selected-direction">
             <p class="eyebrow">Ваше направление</p>
@@ -37,7 +39,7 @@
     <section class="directory-content" aria-labelledby="page-title">
         <div class="directory-heading">
             <a class="back-to-directions" th:href="@{/cabinet/createAppointment/setSpeciality}"><span aria-hidden="true">←</span> Все специальности</a>
-            <p class="eyebrow">Шаг 02 / 04</p>
+            <p class="eyebrow">Шаг 02 / 05</p>
             <h1 id="page-title">Знакомьтесь:<br><span>ваши специалисты.</span></h1>
             <p class="directory-intro">Врачи выбранного медицинского направления. Здесь начинается ваш путь к подходящему специалисту.</p>
         </div>
@@ -54,6 +56,7 @@
                         <h3><span class="doctor-last-name" th:text="${doctor.lastName}">Фамилия</span><span class="doctor-given-name"><span th:text="${doctor.firstName}">Имя</span><th:block th:if="${not #strings.isEmpty(doctor.middleName)}"> <span th:text="${doctor.middleName}">Отчество</span></th:block></span></h3>
                         <p class="doctor-speciality"><span class="speciality-dot" aria-hidden="true"></span><span th:text="${doctorsViews.specialityName}">Специальность</span></p>
                     </div>
+                    <a class="doctor-date-link" th:href="@{/cabinet/createAppointment/setDate(selectDoctorId=${doctor.doctorId})}">Доступные даты <span aria-hidden="true">→</span></a>
                     <span class="doctor-number" aria-hidden="true" th:text="${item.count < 10 ? '0' + item.count : item.count}">01</span>
                 </li>
             </ul>
@@ -65,8 +68,10 @@
             </div>
             <div class="doctors-panel-footer" th:unless="${#lists.isEmpty(doctorsViews.doctors)}"><span class="footer-cross" aria-hidden="true">+</span><p>Выбранное направление можно изменить в любой момент.</p></div>
         </section>
+        <div class="booking-cancel"><a class="cancel-booking" th:href="@{/}">Прервать запись</a></div>
         <div class="directory-footer"><span>Электронная регистратура</span><span>Ваше здоровье — в центре внимания</span></div>
     </section>
 </main>
+<script th:src="@{/scripts/BookingNavigation.js}" defer></script>
 </body>
 </html>

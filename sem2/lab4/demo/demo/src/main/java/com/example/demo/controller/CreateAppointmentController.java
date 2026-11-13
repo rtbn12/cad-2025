@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.DateSelectView;
 import com.example.demo.dto.DoctorSelectionView;
 import com.example.demo.dto.SpecialityView;
+import com.example.demo.service.DateSlotService;
 import com.example.demo.service.DoctorsService;
 import com.example.demo.service.SpecialityService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,10 +22,13 @@ public class CreateAppointmentController {
 
     private final SpecialityService specialityService;
     private final DoctorsService doctorsService;
+    private final DateSlotService dateSlotService;
 
-    public CreateAppointmentController(SpecialityService specialityService, DoctorsService doctorsService) {
+    public CreateAppointmentController(SpecialityService specialityService, DoctorsService doctorsService,
+                                       DateSlotService dateSlotService) {
         this.specialityService = specialityService;
         this.doctorsService = doctorsService;
+        this.dateSlotService = dateSlotService;
     }
 
     @GetMapping("/setSpeciality")
@@ -44,6 +49,15 @@ public class CreateAppointmentController {
         return "selectDoctor";
 
 
+    }
+
+    @GetMapping("/setDate")
+    public String getDats(@RequestParam("selectDoctorId") Long selectDoctorId, Model model){
+
+        DateSelectView dateSelectView = dateSlotService.getDataSelectView(selectDoctorId);
+        model.addAttribute("dateView", dateSelectView);
+
+        return "selectDate";
     }
 
 }
