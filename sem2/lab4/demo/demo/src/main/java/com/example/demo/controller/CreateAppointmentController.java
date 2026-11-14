@@ -10,14 +10,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Optional;
 
 @PreAuthorize("hasAnyRole('PATIENT', 'REGISTRAR')")
 @Controller
@@ -29,18 +27,21 @@ public class CreateAppointmentController {
     private final DateSlotService dateSlotService;
     private final TimeSlotService timeSlotService;
     private final SlotPreviewService slotPreviewService;
+    private final CreateAppointmentService createAppointmentService;
 
     public CreateAppointmentController(SpecialityService specialityService,
                                        DoctorsService doctorsService,
                                        DateSlotService dateSlotService,
                                        TimeSlotService timeSlotService,
-                                       SlotPreviewService slotPreviewService) {
+                                       SlotPreviewService slotPreviewService,
+                                       CreateAppointmentService createAppointmentService) {
 
         this.specialityService = specialityService;
         this.doctorsService = doctorsService;
         this.dateSlotService = dateSlotService;
         this.timeSlotService = timeSlotService;
         this.slotPreviewService = slotPreviewService;
+        this.createAppointmentService = createAppointmentService;
     }
 
     @GetMapping("/setSpeciality")
@@ -102,6 +103,22 @@ public class CreateAppointmentController {
                 slotPreviewService.getAppointmentPreviewView(currentSlotId, authentication.getName()));
 
         return "previewSlot";
+    }
+
+    @PostMapping("/saveNewAppointment")
+    public String saveNewAppointment(@RequestParam("currentSlotId") Long currentSlotId,
+                                     @RequestParam("patientId") Optional<Long> patientId,
+                                     Authentication authentication){
+
+        String createdUserLogin = authentication.getName();
+        createAppointmentService.createAppointment(currentSlotId, patientId, createdUserLogin);
+        return "redirect:/cabinet/createAppointment/successfulCreateAppointment";
+    }
+
+    @GetMapping("/successfulCreateAppointment")
+    public String goTheEnd(){
+
+        return "resultCreateAppointment";
     }
 
 }

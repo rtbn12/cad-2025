@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Запись создана · Электронная регистратура</title>
+    <link rel="icon" th:href="@{/images/icon.ico}">
+    <link rel="stylesheet" th:href="@{/styles/RegistrationStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/SpecialityStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/AppointmentSuccessStyle.css}">
+</head>
+<body class="success-page">
+<header class="directory-header">
+    <div class="directory-header-inner">
+        <a class="directory-brand" th:href="@{/}">
+            <img th:src="@{/images/icon.ico}" width="38" height="38" alt="">
+            <span>Электронная регистратура<small>Запись на приём</small></span>
+        </a>
+        <span class="header-caption">Всё получилось</span>
+    </div>
+</header>
+<main class="success-layout">
+    <section class="success-card" aria-labelledby="success-title">
+        <div class="success-illustration" aria-hidden="true">
+            <div class="success-orbit"><div class="success-check">✓</div></div>
+            <div class="success-route"><span>01</span><i></i><span>02</span><i></i><span>03</span><i></i><span>04</span><i></i><span class="route-finish">✓</span></div>
+            <p>ОТ ВЫБОРА ДО ПОДТВЕРЖДЕНИЯ</p>
+        </div>
+        <div class="success-content">
+            <p class="eyebrow">Запись подтверждена</p>
+            <h1 id="success-title">Готово.<br><span>Встреча с врачом<br>запланирована.</span></h1>
+            <p class="success-description">Вы успешно записались на приём. Можно вернуться в личный кабинет — оформление завершено.</p>
+            <div class="success-note"><span aria-hidden="true">+</span><p>Пожалуйста, приходите к выбранному времени.<br>Берегите себя — до встречи на приёме.</p></div>
+            <a class="cabinet-button" th:href="@{/}">В личный кабинет <span aria-hidden="true">→</span></a>
+            <p class="success-footnote">Спасибо, что пользуетесь электронной регистратурой.</p>
+        </div>
+    </section>
+    <div class="directory-footer"><span>Электронная регистратура</span><span>Ваше здоровье — в центре внимания</span></div>
+</main>
+</body>
+</html>
