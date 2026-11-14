@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Проверка записи · Электронная регистратура</title>
+    <link rel="icon" th:href="@{/images/icon.ico}">
+    <link rel="stylesheet" th:href="@{/styles/RegistrationStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/SpecialityStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/DoctorStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/DateStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/TimeStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/PreviewStyle.css}">
+</head>
+<body class="specialities-page doctors-page preview-page">
+<header class="directory-header"><div class="directory-header-inner">
+    <a class="directory-brand" th:href="@{/}"><img th:src="@{/images/icon.ico}" width="38" height="38" alt=""><span>Электронная регистратура<small>Запись на приём</small></span></a>
+    <a class="cabinet-link" th:href="@{/}"><span aria-hidden="true">←</span> Личный кабинет</a>
+</div></header>
+<main class="directory-layout" th:attr="data-booking-speciality=${appointmentPreview.specialityId},data-booking-doctor=${appointmentPreview.doctorId}">
+    <aside class="journey" aria-label="Этапы записи на приём">
+        <p class="eyebrow">Запись на приём</p>
+        <ol class="journey-steps">
+            <li class="is-complete"><a class="completed-step" th:href="@{/cabinet/createAppointment/setSpeciality}"><span class="step-number" aria-hidden="true">✓</span><div><strong>Специальность</strong><span>Направление выбрано</span></div></a></li>
+            <li class="is-complete"><a class="completed-step" th:href="@{/cabinet/createAppointment/setDoctor(specialityId=${appointmentPreview.specialityId})}"><span class="step-number" aria-hidden="true">✓</span><div><strong>Врач</strong><span>Специалист выбран</span></div></a></li>
+            <li class="is-complete"><a class="completed-step" th:href="@{/cabinet/createAppointment/setDate(selectDoctorId=${appointmentPreview.doctorId})}"><span class="step-number" aria-hidden="true">✓</span><div><strong>Дата</strong><span th:text="${#temporals.format(appointmentPreview.appointmentDate,'dd.MM.yyyy')}">Дата выбрана</span></div></a></li>
+            <li class="is-complete"><a class="completed-step" th:href="@{/cabinet/createAppointment/setTime(selectDoctorId=${appointmentPreview.doctorId},selectDate=${appointmentPreview.appointmentDate})}"><span class="step-number" aria-hidden="true">✓</span><div><strong>Время</strong><span>Интервал выбран</span></div></a></li>
+            <li class="is-current" aria-current="step"><span class="step-number">05</span><div><strong>Подтверждение</strong><span>Детали записи</span></div></li>
+        </ol>
+        <div class="selected-direction"><p class="eyebrow">Ваше направление</p><strong th:text="${appointmentPreview.specialityName}">Специальность</strong><a th:href="@{/cabinet/createAppointment/setSpeciality}">Изменить <span aria-hidden="true">↗</span></a></div>
+    </aside>
+    <section class="directory-content" aria-labelledby="page-title">
+        <div class="directory-heading">
+            <a class="back-to-directions" th:href="@{/cabinet/createAppointment/setTime(selectDoctorId=${appointmentPreview.doctorId},selectDate=${appointmentPreview.appointmentDate})}"><span aria-hidden="true">←</span> К выбору времени</a>
+            <p class="eyebrow">Шаг 05 / 05</p>
+            <h1 id="page-title">Всё на своих местах.<br><span>Проверьте детали.</span></h1>
+            <p class="directory-intro">Ваш выбор собран на одной странице. Убедитесь, что врач, дата и время вам подходят.</p>
+        </div>
+        <section class="speciality-panel preview-panel" aria-labelledby="preview-title">
+            <div class="panel-heading"><div><p class="panel-kicker">Предварительная запись</p><h2 id="preview-title">Детали посещения</h2></div><span class="preview-badge">Не подтверждено</span></div>
+            <div class="appointment-highlight">
+                <div class="highlight-date"><p>Дата приёма</p><strong th:text="${#temporals.format(appointmentPreview.appointmentDate,'dd.MM.yyyy')}">16.11.2026</strong><a th:href="@{/cabinet/createAppointment/setDate(selectDoctorId=${appointmentPreview.doctorId})}">Изменить дату ↗</a></div>
+                <div class="highlight-time"><p>Время приёма</p><strong><span th:text="${#temporals.format(appointmentPreview.appointStartTime,'HH:mm')}">09:00</span><span class="time-separator">—</span><span th:text="${#temporals.format(appointmentPreview.appointmentEndTime,'HH:mm')}">09:30</span></strong><a th:href="@{/cabinet/createAppointment/setTime(selectDoctorId=${appointmentPreview.doctorId},selectDate=${appointmentPreview.appointmentDate})}">Изменить время ↗</a></div>
+            </div>
+            <dl class="preview-details">
+                <div class="preview-detail"><dt>Пациент</dt><dd><span th:text="${appointmentPreview.patientLastName}">Фамилия</span> <span th:text="${appointmentPreview.patientFirstName}">Имя</span><th:block th:if="${not #strings.isEmpty(appointmentPreview.patientMiddleName)}"> <span th:text="${appointmentPreview.patientMiddleName}">Отчество</span></th:block></dd></div>
+                <div class="preview-detail"><dt>Медицинское направление</dt><dd th:text="${appointmentPreview.specialityName}">Специальность</dd><a th:href="@{/cabinet/createAppointment/setSpeciality}">Изменить ↗</a></div>
+                <div class="preview-detail"><dt>Врач</dt><dd><span th:text="${appointmentPreview.doctorLastName}">Фамилия</span> <span th:text="${appointmentPreview.doctorFirstName}">Имя</span><th:block th:if="${not #strings.isEmpty(appointmentPreview.doctorMiddleName)}"> <span th:text="${appointmentPreview.doctorMiddleName}">Отчество</span></th:block></dd><a th:href="@{/cabinet/createAppointment/setDoctor(specialityId=${appointmentPreview.specialityId})}">Другой врач ↗</a></div>
+                <div class="preview-detail"><dt>Продолжительность</dt><dd>30 минут</dd></div>
+            </dl>
+            <div class="preview-confirmation"><p class="preview-notice"><span aria-hidden="true">+</span> Это предварительные данные. Слот ещё не забронирован.</p><button class="confirm-appointment" type="button" disabled aria-describedby="confirmation-pending">Подтвердить запись <span aria-hidden="true">→</span></button><p id="confirmation-pending" class="confirmation-pending">Подтверждение пока недоступно. Вы можете проверить и изменить свой выбор.</p></div>
+        </section>
+        <div class="date-actions"><a class="return-to-time" th:href="@{/cabinet/createAppointment/setTime(selectDoctorId=${appointmentPreview.doctorId},selectDate=${appointmentPreview.appointmentDate})}">← Вернуться к времени</a><a class="cancel-booking" th:href="@{/}">Прервать запись</a></div>
+        <div class="directory-footer"><span>Электронная регистратура</span><span>Ваше здоровье — в центре внимания</span></div>
+    </section>
+</main>
+<script th:src="@{/scripts/BookingNavigation.js}" defer></script>
+</body>
+</html>

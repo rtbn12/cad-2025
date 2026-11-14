@@ -16,7 +16,7 @@
     <a class="directory-brand" th:href="@{/}"><img th:src="@{/images/icon.ico}" width="38" height="38" alt=""><span>Электронная регистратура<small>Запись на приём</small></span></a>
     <a class="cabinet-link" th:href="@{/}"><span aria-hidden="true">←</span> Личный кабинет</a>
 </div></header>
-<main class="directory-layout" th:attr="data-booking-speciality=${timeView.selectDoctorSpecialityId},data-booking-doctor=${timeView.selectDoctorId}">
+<main class="directory-layout" th:attr="data-booking-speciality=${timeView.selectDoctorSpecialityId},data-booking-doctor=${timeView.selectDoctorId},data-booking-date=${timeView.selectDate}">
     <aside class="journey" aria-label="Этапы записи на приём">
         <p class="eyebrow">Запись на приём</p>
         <ol class="journey-steps">
@@ -44,15 +44,18 @@
             <div class="panel-heading time-panel-heading"><div><p class="panel-kicker">Время приёма</p><h2 id="times-title" th:text="${#temporals.format(timeView.selectDate,'dd.MM.yyyy')}">Дата посещения</h2></div><a class="change-date" th:href="@{/cabinet/createAppointment/setDate(selectDoctorId=${timeView.selectDoctorId})}">Изменить дату <span aria-hidden="true">↗</span></a></div>
             <div class="time-legend"><span><i class="legend-free" aria-hidden="true"></i>Свободно</span><span><i class="legend-unavailable" aria-hidden="true"></i>Недоступно</span><span class="duration-label">30 минут на приём</span></div>
             <div class="no-free-times" role="status" th:if="${#lists.isEmpty(timeView.timeSlots.?[available])}"><strong>На этот день свободного времени уже нет.</strong><p>Выберите другую дату или посмотрите расписание другого врача.</p></div>
+            <form th:action="@{/cabinet/createAppointment/confirmSlot}" method="get">
             <fieldset class="times-fieldset">
                 <legend class="visually-hidden">Выберите время приёма</legend>
                 <div class="time-grid">
                     <label class="time-option" th:each="slot : ${timeView.timeSlots}" th:classappend="${not slot.available} ? 'is-unavailable'">
-                        <input type="radio" name="slotId" th:value="${slot.slotId}" th:disabled="${not slot.available}" th:attr="aria-label=${#temporals.format(slot.start,'HH:mm') + ' — ' + #temporals.format(slot.end,'HH:mm')}">
+                        <input type="radio" name="currentSlotId" required th:value="${slot.slotId}" th:disabled="${not slot.available}" th:attr="aria-label=${#temporals.format(slot.start,'HH:mm') + ' — ' + #temporals.format(slot.end,'HH:mm')}">
                         <span class="time-tile"><span class="time-top"><span class="time-start" th:text="${#temporals.format(slot.start,'HH:mm')}">09:00</span><span class="time-indicator" aria-hidden="true">✓</span></span><span class="time-end" th:text="${'до ' + #temporals.format(slot.end,'HH:mm')}">до 09:30</span><span class="time-state" th:text="${slot.available ? 'Свободно' : (slot.status.name() == 'BOOKED' ? 'Занято' : 'Время прошло')}">Свободно</span></span>
                     </label>
                 </div>
             </fieldset>
+            <div class="date-continue" th:unless="${#lists.isEmpty(timeView.timeSlots.?[available])}"><button type="submit">Проверить запись <span aria-hidden="true">→</span></button></div>
+            </form>
             <div class="doctors-panel-footer"><span class="footer-cross" aria-hidden="true">+</span><p>Выбор времени ещё не бронирует слот. Запись появится после окончательного подтверждения.</p></div>
         </section>
         <div class="date-actions"><a class="return-to-dates" th:href="@{/cabinet/createAppointment/setDate(selectDoctorId=${timeView.selectDoctorId})}">← Вернуться к датам</a><a class="cancel-booking" th:href="@{/}">Прервать запись</a></div>
