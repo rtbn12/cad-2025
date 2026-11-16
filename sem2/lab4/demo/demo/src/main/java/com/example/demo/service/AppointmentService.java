@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import com.example.demo.dto.AppointmentDetailsView;
 import com.example.demo.dto.AppointmentMiniView;
+import com.example.demo.dto.DateView;
+import com.example.demo.dto.TransferAppointmentView;
 import com.example.demo.entity.*;
 import com.example.demo.exception.*;
 import com.example.demo.repository.*;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -189,6 +192,80 @@ public class AppointmentService {
                 }
             }
 
+        }else{
+            throw new AppointmentIsNotCreated("Заявка на посещение не активная");
+        }
+
+    }
+
+    @Transactional(readOnly = true)
+    public TransferAppointmentView getTransferAppointment(Long currentAppointmentId, String currentUserLogin){
+
+        User currentUser = userRepository.findByLogin(currentUserLogin).orElseThrow(() ->
+                        new UserNotFoundException("Пользователь не найден"));
+
+        Appointment appointment = appointmentRepository.findById(currentAppointmentId).orElseThrow(()->
+                new AppointmentNotFoundException("Посещение не найдено"));
+
+        boolean allowed = switch (currentUser.getRole()) {
+            case PATIENT -> appointment.getPatient().getUser().getId().equals(currentUser.getId());
+
+            case DOCTOR -> false;
+
+            case REGISTRAR -> true;
+        };
+
+        if (!allowed) {
+            throw new AccessDeniedException("Нет доступа к этой записи на приём");
+        }
+
+        Slot currentSlot = appointment.getSlot();
+        LocalDateTime now = LocalDateTime.now();
+
+        if(appointment.getStatus().equals(AppointmentStatus.CREATED)){
+            if (!currentSlot.getSlotStart().isBefore(now.plusMinutes(10))){
+
+                AppointmentMiniView currentMiniView = new AppointmentMiniView(appointment.getSlot().getSlotStart().toLocalDate(),
+                        appointment.getSlot().getSlotStart().toLocalTime(),
+                        appointment.getSlot().getSlotEnd().toLocalTime(),
+                        appointment.getSlot().getDoctor().getSpeciality().getName(),
+                        appointment.getSlot().getDoctor().getFirstName(),
+                        appointment.getSlot().getDoctor().getMiddleName(),
+                        appointment.getSlot().getDoctor().getLastName(),
+                        appointment.getPatient().getFirstName(),
+                        appointment.getPatient().getMiddleName(),
+                        appointment.getPatient().getLastName(),
+                        appointment.getId(),
+                        appointment.getStatus());
+
+                AppointmentDetailsView currentAppointmentDetailsView = new AppointmentDetailsView(
+                        currentMiniView,
+                        appointment.getPatient().getId(),
+                        appointment.getSlot().getDoctor().getId(),
+                        appointment.getSlot().getDoctor().getSpeciality().getId(),
+                        appointment.getSlot().getId(),
+                        appointment.getCreatedAt(),
+                        appointment.getCancelledAt(),
+                        appointment.getCreatedBy().getRole());
+
+                List<LocalDate> availableDates = slotRepository.findAvailableDates(
+                        appointment.getSlot().getDoctor().getId(), now);
+
+                List<DateView> dates = new ArrayList<>();
+
+                for (LocalDate availableDate : availableDates){
+                    dates.add(new DateView(availableDate));
+                }
+
+                return new TransferAppointmentView(currentAppointmentDetailsView, dates);
+
+            }else{
+                if (appointment.getSlot().getSlotStart().isAfter(now)){
+                    throw  new SlotIsNotInDateTimeZone("Запись можно перенести не позднее, чем за 10 минут до её начала");
+                }else{
+                    throw  new SlotIsNotInDateTimeZone("Нельзя перенести запись, время начала которой уже прошло");
+                }
+            }
         }else{
             throw new AppointmentIsNotCreated("Заявка на посещение не активная");
         }

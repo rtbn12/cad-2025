@@ -17,6 +17,8 @@
 .record-action-buttons button { padding: 11px 16px; background: #e2e8f0; color: #4a5568; border: 1px solid #cbd5e0; border-radius: 5px; font: inherit; font-size: 13px; cursor: not-allowed; }
 .record-action-buttons button span { margin-left: 15px; }
 .record-action-buttons form { margin: 0; }
+.transfer-appointment-link { display: inline-flex; align-items: center; gap: 15px; padding: 11px 16px; color: #ffffff; background: #2a6b9c; border: 1px solid #2a6b9c; border-radius: 5px; font-size: 13px; text-decoration: none; }
+.transfer-appointment-link:hover { color: #ffffff; background: #1a4f76; border-color: #1a4f76; }
 .record-action-buttons .cancel-appointment-button:not(:disabled) { background: #ffffff; color: #2a6b9c; border-color: #2a6b9c; cursor: pointer; }
 .record-action-buttons .cancel-appointment-button:not(:disabled):hover { background: #f8fafc; }
 .record-action-buttons .cancel-appointment-button:focus-visible { outline: 3px solid #2a6b9c; outline-offset: 3px; }
