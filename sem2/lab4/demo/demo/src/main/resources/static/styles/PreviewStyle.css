@@ -17,6 +17,9 @@
 .preview-notice > span { color: #2a6b9c; font-size: 22px; line-height: 1; }
 .confirm-appointment { margin-top: 19px; display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 14px 18px; border: 1px solid #cbd5e0; border-radius: 5px; background: #e2e8f0; color: #4a5568; font: inherit; font-size: 14px; font-weight: 600; cursor: not-allowed; }
 .confirmation-pending { font-size: 11px; color: #4a5568; margin-top: 9px; }
+.confirm-appointment:not(:disabled) { background: #2a6b9c; color: #ffffff; border-color: #2a6b9c; cursor: pointer; }
+.confirm-appointment:not(:disabled):hover { background: #1a4f76; border-color: #1a4f76; }
+.confirm-appointment:focus-visible { outline: 3px solid #2a6b9c; outline-offset: 3px; }
 .return-to-time { text-decoration: none; }
 .return-to-time:hover { text-decoration: underline; }
 @media(max-width:1000px) { .appointment-highlight strong { font-size: 23px; } .appointment-highlight > div { padding: 22px; } }

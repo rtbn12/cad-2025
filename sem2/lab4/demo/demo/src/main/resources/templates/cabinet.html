@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Личный кабинет · Электронная регистратура</title>
     <link rel="icon" th:href="@{/images/icon.ico}">
+    <link rel="stylesheet" th:href="@{/styles/CabinetAppointments.css}">
     <style>
         :root {
             color-scheme: light;
@@ -176,6 +177,17 @@
             <button type="submit">Выйти из аккаунта</button>
         </div>
     </form>
+    <section class="appointments-section" th:if="${cabinet.role.name() != 'REGISTRAR'}" aria-labelledby="appointments-title">
+        <div class="appointments-heading"><div><p class="appointments-eyebrow">Электронная регистратура</p><h2 id="appointments-title" th:text="${cabinet.role.name() == 'DOCTOR' ? 'Ваши приёмы' : 'Ваши записи'}">Ваши записи</h2><p class="appointments-intro">Дата, время и статус каждого посещения — в одном месте.</p></div><span class="appointments-count" th:text="${#lists.size(miniAppointmentList)}" aria-label="Количество записей">0</span></div>
+        <div class="appointments-empty" th:if="${#lists.isEmpty(miniAppointmentList)}"><span class="empty-cross" aria-hidden="true">+</span><h3>Здесь пока пусто</h3><p th:text="${cabinet.role.name() == 'DOCTOR' ? 'Когда пациенты запишутся к вам, приёмы появятся здесь.' : 'После подтверждения записи её детали появятся в этом списке.'}">Ваши записи появятся здесь.</p><a th:if="${cabinet.role.name() == 'PATIENT'}" th:href="@{/cabinet/createAppointment/setSpeciality}">Выбрать врача <span aria-hidden="true">↗</span></a></div>
+        <ul class="appointments-list" th:unless="${#lists.isEmpty(miniAppointmentList)}">
+            <li th:each="appointment : ${miniAppointmentList}"><a class="appointment-card appointment-card-link" th:href="@{/appointmentDetails(currentAppointmentId=${appointment.appointmentId})}">
+                <div class="appointment-date"><strong th:text="${#temporals.format(appointment.date, 'dd')}">16</strong><span th:text="${#temporals.format(appointment.date, 'MM.yyyy')}">11.2026</span><span class="appointment-time" th:text="${#temporals.format(appointment.startAppointment,'HH:mm') + ' — ' + #temporals.format(appointment.endAppointment,'HH:mm')}">09:00 — 09:30</span></div>
+                <div class="appointment-person"><p class="appointment-speciality" th:text="${appointment.specialityName}">Специальность</p><h3 th:if="${cabinet.role.name() == 'PATIENT'}"><span th:text="${appointment.doctorLastName}">Фамилия</span> <span th:text="${appointment.doctorFirstName}">Имя</span><th:block th:if="${not #strings.isEmpty(appointment.doctorMiddleName)}"> <span th:text="${appointment.doctorMiddleName}">Отчество</span></th:block></h3><h3 th:if="${cabinet.role.name() == 'DOCTOR'}"><span th:text="${appointment.patientLastName}">Фамилия</span> <span th:text="${appointment.patientFirstName}">Имя</span><th:block th:if="${not #strings.isEmpty(appointment.patientMiddleName)}"> <span th:text="${appointment.patientMiddleName}">Отчество</span></th:block></h3><p class="appointment-caption" th:text="${cabinet.role.name() == 'DOCTOR' ? 'Пациент' : 'Лечащий врач'}">Лечащий врач</p></div>
+                <div class="appointment-meta" th:switch="${appointment.status.name()}"><span class="appointment-status" th:case="'CREATED'">Запись активна</span><span class="appointment-status is-completed" th:case="'COMPLETED'">Приём завершён</span><span class="appointment-status is-cancelled" th:case="'CANCELLED_BY_PATIENT'">Отменена пациентом</span><span class="appointment-status is-cancelled" th:case="'CANCELLED_BY_REGISTRAR'">Отменена регистратором</span><span class="appointment-status" th:case="*">Статус уточняется</span></div>
+            </a></li>
+        </ul>
+    </section>
 </main>
 </body>
 </html>
