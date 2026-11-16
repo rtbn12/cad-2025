@@ -25,7 +25,19 @@
             <div class="preview-detail"><dt>Продолжительность</dt><dd>30 минут</dd></div>
         </dl>
         <section class="record-history" aria-labelledby="history-title"><h3 id="history-title">История записи</h3><dl><div><dt>Дата создания</dt><dd th:text="${#temporals.format(details.createdAt,'dd.MM.yyyy HH:mm')}">Дата</dd></div><div><dt>Кто оформил</dt><dd th:text="${details.createdByRole.name() == 'PATIENT' ? 'Пациент' : (details.createdByRole.name() == 'REGISTRAR' ? 'Сотрудник регистратуры' : 'Медицинский сотрудник')}">Пациент</dd></div><div th:if="${details.cancelledAt != null}"><dt>Дата отмены</dt><dd th:text="${#temporals.format(details.cancelledAt,'dd.MM.yyyy HH:mm')}">Дата</dd></div></dl></section>
-        <section class="record-actions" th:unless="${doctorView}" aria-labelledby="actions-title"><h3 id="actions-title">Управление записью</h3><div class="record-action-buttons"><button type="button" disabled>Перенести запись <span aria-hidden="true">↗</span></button><button type="button" disabled>Отменить запись</button></div><p>Перенос и отмена пока недоступны. Здесь можно просмотреть подробности посещения.</p></section>
+        <section class="record-actions" th:unless="${doctorView}" th:with="canCancel=${appointment.status.name() == 'CREATED' and not appointment.date.atTime(appointment.startAppointment).isBefore(#temporals.createNow().plusMinutes(10))}" aria-labelledby="actions-title">
+            <h3 id="actions-title">Управление записью</h3>
+            <div class="record-action-buttons">
+                <button type="button" disabled>Перенести запись <span aria-hidden="true">↗</span></button>
+                <form th:action="@{/cancelAppointment}" method="post" onsubmit="return confirm('Вы уверены, что хотите отменить запись на приём? Время станет доступно другим пациентам.');">
+                    <input type="hidden" name="currentAppointmentId" th:value="${appointment.appointmentId}">
+                    <button class="cancel-appointment-button" type="submit" th:disabled="${not canCancel}">Отменить запись</button>
+                </form>
+            </div>
+            <p th:if="${canCancel}">Отмена доступна не позднее чем за 10 минут до начала. Перед отправкой потребуется подтверждение.</p>
+            <p th:unless="${canCancel}" th:text="${appointment.status.name() != 'CREATED' ? 'Эта запись уже не активна. Повторная отмена недоступна.' : 'До начала приёма осталось менее 10 минут или он уже начался. Отмена недоступна.'}">Отмена недоступна.</p>
+            <p>Перенос записи пока недоступен.</p>
+        </section>
         <div class="doctor-readonly" th:if="${doctorView}"><span aria-hidden="true">+</span><p>Информация о пациенте и времени приёма. Изменение записи в кабинете врача не предусмотрено.</p></div>
     </section>
     <div class="details-bottom"><a class="details-home" th:href="@{/}">В личный кабинет <span aria-hidden="true">→</span></a></div>

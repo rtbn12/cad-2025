@@ -4,15 +4,13 @@ import com.example.demo.dto.AppointmentDetailsView;
 import com.example.demo.dto.AppointmentMiniView;
 import com.example.demo.entity.*;
 import com.example.demo.exception.*;
-import com.example.demo.repository.AppointmentRepository;
-import com.example.demo.repository.DoctorRepository;
-import com.example.demo.repository.PatientRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,16 +21,19 @@ public class AppointmentService {
     private final UserRepository userRepository;
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
+    private final SlotRepository slotRepository;
 
     public AppointmentService(AppointmentRepository appointmentRepository,
                               UserRepository userRepository,
                               PatientRepository patientRepository,
-                              DoctorRepository doctorRepository) {
+                              DoctorRepository doctorRepository,
+                              SlotRepository slotRepository) {
 
         this.appointmentRepository = appointmentRepository;
         this.userRepository = userRepository;
         this.patientRepository = patientRepository;
         this.doctorRepository = doctorRepository;
+        this.slotRepository = slotRepository;
     }
 
     @Transactional(readOnly = true)
@@ -129,6 +130,68 @@ public class AppointmentService {
                 appointment.getCreatedAt(),
                 appointment.getCancelledAt(),
                 appointment.getCreatedBy().getRole());
+
+    }
+
+    @Transactional
+    public void cancelAppointment(Long currentAppointmentId, String currentUserLogin){
+        User currentUser = userRepository.findByLogin(currentUserLogin)
+                .orElseThrow(() ->
+                        new UserNotFoundException("Пользователь не найден"));
+
+        Appointment appointment = appointmentRepository.findByIdForUpdate(currentAppointmentId).orElseThrow(()->
+                new AppointmentNotFoundException("Посещение не найдено"));
+
+        boolean allowed = switch (currentUser.getRole()) {
+            case PATIENT -> appointment.getPatient().getUser().getId().equals(currentUser.getId());
+
+            case DOCTOR -> false;
+
+            case REGISTRAR -> true;
+        };
+
+        if (!allowed) {
+            throw new AccessDeniedException(
+                    "Нет доступа к этой записи на приём"
+            );
+        }
+
+        Slot currentSlot = slotRepository.findByIdForUpdate(appointment.getSlot().getId()).orElseThrow(()->
+                new SlotNotFoundException("Слот не найден"));
+        LocalDateTime now = LocalDateTime.now();
+
+        if(appointment.getStatus().equals(AppointmentStatus.CREATED)){
+
+            if (!currentSlot.getSlotStart().isBefore(now.plusMinutes(10))){
+
+                appointment.setCancelledAt(now);
+
+                if(currentUser.getRole().equals(UserRole.PATIENT)){
+                    appointment.setStatus(AppointmentStatus.CANCELLED_BY_PATIENT);
+                } else if (currentUser.getRole().equals(UserRole.REGISTRAR)) {
+                    appointment.setStatus(AppointmentStatus.CANCELLED_BY_REGISTRAR);
+                }else{
+                    throw new AccessDeniedException("Нет доступа к этой записи на приём");
+                }
+
+                currentSlot.setStatus(SlotStatus.FREE);
+                slotRepository.save(currentSlot);
+
+            }else{
+
+                if (appointment.getSlot().getSlotStart().isAfter(now)){
+
+                    throw  new SlotIsNotInDateTimeZone("Запись можно отменить не позднее, чем за 10 минут до её начала");
+
+                }else{
+
+                    throw  new SlotIsNotInDateTimeZone("Нельзя отменить запись, время начала которой уже прошло");
+                }
+            }
+
+        }else{
+            throw new AppointmentIsNotCreated("Заявка на посещение не активная");
+        }
 
     }
 

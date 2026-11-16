@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Запись отменена · Электронная регистратура</title>
+    <link rel="icon" th:href="@{/images/icon.ico}">
+    <link rel="stylesheet" th:href="@{/styles/RegistrationStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/SpecialityStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/AppointmentSuccessStyle.css}">
+</head>
+<body class="success-page">
+<header class="directory-header">
+    <div class="directory-header-inner">
+        <a class="directory-brand" th:href="@{/}">
+            <img th:src="@{/images/icon.ico}" width="38" height="38" alt="">
+            <span>Электронная регистратура<small>Запись на приём</small></span>
+        </a>
+        <span class="header-caption">Всё получилось</span>
+    </div>
+</header>
+<main class="success-layout">
+    <section class="success-card" aria-labelledby="success-title">
+        <div class="success-illustration" aria-hidden="true">
+            <div class="success-orbit"><div class="success-check">✓</div></div>
+            <p>ИЗМЕНЕНИЯ СОХРАНЕНЫ</p>
+        </div>
+        <div class="success-content">
+            <p class="eyebrow">Запись отменена</p>
+            <h1 id="success-title">Готово.<br><span>Ваши планы<br>обновлены.</span></h1>
+            <p class="success-description">Запись на приём отменена. Освободившееся время снова доступно для записи, а отменённое посещение осталось в вашей истории.</p>
+            <div class="success-note"><span aria-hidden="true">+</span><p>Если приём всё ещё нужен, вы можете выбрать другую дату и время.<br>Берегите себя.</p></div>
+            <a class="cabinet-button" th:href="@{/}">В личный кабинет <span aria-hidden="true">→</span></a>
+            <p class="success-footnote">Спасибо, что пользуетесь электронной регистратурой.</p>
+        </div>
+    </section>
+    <div class="directory-footer"><span>Электронная регистратура</span><span>Ваше здоровье — в центре внимания</span></div>
+</main>
+</body>
+</html>
