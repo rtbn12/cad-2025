@@ -20,10 +20,10 @@
         <div class="error-content">
             <p class="eyebrow">Ошибка 409 · Время недоступно</p>
             <h1 id="error-title">Планы меняются.<br><span>Найдём другое время.</span></h1>
-            <p class="error-description" th:unless="${path == '/cancelAppointment'}">Выбранный слот уже занят или время начала приёма наступило. Вернитесь к расписанию и выберите другой интервал.</p>
-            <p class="error-description" th:if="${path == '/cancelAppointment'}">Не удалось отменить запись: она уже не активна или до начала приёма осталось менее 10 минут. Вернитесь в кабинет и проверьте её текущий статус.</p>
-            <p class="error-aside" th:unless="${path == '/cancelAppointment'}">Запись не была создана. Ваш маршрут можно продолжить с выбора другого времени.</p>
-            <div class="error-actions"><a id="error-back" class="error-primary" th:href="${path == '/cancelAppointment'} ? @{/} : @{/cabinet/createAppointment/setSpeciality}"><span aria-hidden="true">←</span> <span id="error-back-label" th:text="${path == '/cancelAppointment' ? 'В личный кабинет' : 'К специальностям'}">К специальностям</span></a><a class="error-secondary" th:href="@{/}">В личный кабинет <span aria-hidden="true">↗</span></a></div>
+            <p class="error-description" th:unless="${path == '/cancelAppointment' or path == '/saveTransfer'}">Выбранный слот уже занят или время начала приёма наступило. Вернитесь к расписанию и выберите другой интервал.</p>
+            <p class="error-description" th:if="${path == '/cancelAppointment' or path == '/saveTransfer'}">Операцию выполнить не удалось: запись уже не активна, до начала приёма осталось менее 10 минут или выбранное время занято. Вернитесь в кабинет и проверьте текущую запись.</p>
+            <p class="error-aside" th:unless="${path == '/cancelAppointment' or path == '/saveTransfer'}">Запись не была создана. Ваш маршрут можно продолжить с выбора другого времени.</p>
+            <div class="error-actions"><a id="error-back" class="error-primary" th:href="${path == '/cancelAppointment' or path == '/saveTransfer'} ? @{/} : @{/cabinet/createAppointment/setSpeciality}"><span aria-hidden="true">←</span> <span id="error-back-label" th:text="${path == '/cancelAppointment' or path == '/saveTransfer' ? 'В личный кабинет' : 'К специальностям'}">К специальностям</span></a><a class="error-secondary" th:href="@{/}">В личный кабинет <span aria-hidden="true">↗</span></a></div>
         </div>
     </section>
     <div class="directory-footer"><span>Электронная регистратура</span><span>Даже если свернули не туда — мы рядом</span></div>

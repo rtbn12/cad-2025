@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
@@ -61,6 +62,23 @@ public class TransferAppointmentController {
         model.addAttribute("transferAppointmentPreview", transferAppointmentPreview);
 
         return "previewForTransferAppointment";
+    }
+
+    @PostMapping("/saveTransfer")
+    public String saveTransfer(@RequestParam("transferAppointmentId") Long transferAppointmentId,
+                               @RequestParam("selectSlotId") Long selectSlotId,
+                               Authentication authentication){
+
+        appointmentService.saveTransferAppointment(transferAppointmentId, selectSlotId, authentication.getName());
+
+        return "redirect:/successfulTransferAppointment";
+
+    }
+
+    @GetMapping("/successfulTransferAppointment")
+    public String goTheEnd(){
+
+        return "resultTransferAppointment";
     }
 
 

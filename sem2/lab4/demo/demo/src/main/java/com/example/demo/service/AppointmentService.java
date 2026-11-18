@@ -25,13 +25,15 @@ public class AppointmentService {
     private final DoctorRepository doctorRepository;
     private final SlotRepository slotRepository;
     private final TimeSlotService timeSlotService;
+    private final CreateAppointmentService createAppointmentService;
+
     public AppointmentService(AppointmentRepository appointmentRepository,
                               UserRepository userRepository,
                               PatientRepository patientRepository,
                               DoctorRepository doctorRepository,
                               SlotRepository slotRepository,
                               TimeSlotService timeSlotService,
-                              SlotPreviewService slotPreviewService) {
+                              CreateAppointmentService createAppointmentService) {
 
         this.appointmentRepository = appointmentRepository;
         this.userRepository = userRepository;
@@ -39,6 +41,7 @@ public class AppointmentService {
         this.doctorRepository = doctorRepository;
         this.slotRepository = slotRepository;
         this.timeSlotService = timeSlotService;
+        this.createAppointmentService = createAppointmentService;
     }
 
     @Transactional(readOnly = true)
@@ -203,7 +206,7 @@ public class AppointmentService {
     @Transactional(readOnly = true)
     public TransferAppointmentView getTransferAppointment(Long currentAppointmentId, String currentUserLogin){
 
-        Appointment appointment = requireTransferableAppointment(currentAppointmentId, currentUserLogin);
+        Appointment appointment = requireTransferableAppointment(currentAppointmentId, currentUserLogin,0);
 
         LocalDateTime now = LocalDateTime.now();
 
@@ -252,7 +255,7 @@ public class AppointmentService {
             throw new DateIsNotVariable("Нельзя выбрать прошедшую дату");
         }
 
-        Appointment appointment = requireTransferableAppointment(currentAppointmentId, currentUserLogin);
+        Appointment appointment = requireTransferableAppointment(currentAppointmentId, currentUserLogin, 0);
 
         TimeSelectView currentTimeSelectView = timeSlotService.getTimeSelectView(
                 appointment.getSlot().getDoctor().getId(), currentDate);
@@ -268,61 +271,111 @@ public class AppointmentService {
                                                                  Long newSlotId,
                                                                  String currentUserLogin){
 
-        Appointment oldAppointment = requireTransferableAppointment(currentAppointmentId, currentUserLogin);
+        Appointment oldAppointment = requireTransferableAppointment(currentAppointmentId, currentUserLogin, 0);
         Slot selectedSlot = slotRepository.findById(newSlotId).orElseThrow(()->
                 new SlotNotFoundException("Слот не найден"));
 
-        if(!selectedSlot.getId().equals(oldAppointment.getSlot().getId())){
-            if(selectedSlot.getDoctor().getId().equals(oldAppointment.getSlot().getDoctor().getId())){
-                if(selectedSlot.getStatus().equals(SlotStatus.FREE)){
-                    if(selectedSlot.getSlotStart().isAfter(LocalDateTime.now())){
+        if(checkNewSlot(selectedSlot,oldAppointment)){
 
-                        AppointmentDetailsView currentAppointmentDetailsView =
-                                getDetailView(currentAppointmentId, currentUserLogin);
+            AppointmentDetailsView currentAppointmentDetailsView =
+                    getDetailView(currentAppointmentId, currentUserLogin);
 
-                        AppointmentPreviewView newAppointmentPreview = new AppointmentPreviewView(
-                                oldAppointment.getPatient().getFirstName(),
-                                oldAppointment.getPatient().getMiddleName(),
-                                oldAppointment.getPatient().getLastName(),
-                                selectedSlot.getDoctor().getFirstName(),
-                                selectedSlot.getDoctor().getMiddleName(),
-                                selectedSlot.getDoctor().getLastName(),
-                                selectedSlot.getDoctor().getId(),
-                                selectedSlot.getDoctor().getSpeciality().getName(),
-                                selectedSlot.getDoctor().getSpeciality().getId(),
-                                selectedSlot.getSlotStart().toLocalDate(),
-                                selectedSlot.getSlotStart().toLocalTime(),
-                                selectedSlot.getSlotEnd().toLocalTime(),
-                                selectedSlot.getId());
+            AppointmentPreviewView newAppointmentPreview = new AppointmentPreviewView(
+                    oldAppointment.getPatient().getFirstName(),
+                    oldAppointment.getPatient().getMiddleName(),
+                    oldAppointment.getPatient().getLastName(),
+                    selectedSlot.getDoctor().getFirstName(),
+                    selectedSlot.getDoctor().getMiddleName(),
+                    selectedSlot.getDoctor().getLastName(),
+                    selectedSlot.getDoctor().getId(),
+                    selectedSlot.getDoctor().getSpeciality().getName(),
+                    selectedSlot.getDoctor().getSpeciality().getId(),
+                    selectedSlot.getSlotStart().toLocalDate(),
+                    selectedSlot.getSlotStart().toLocalTime(),
+                    selectedSlot.getSlotEnd().toLocalTime(),
+                    selectedSlot.getId());
 
-                        return new TransferAppointmentPreview(currentAppointmentDetailsView, newAppointmentPreview);
-
-                    }else{
-                        throw  new SlotIsNotInDateTimeZone("Время начала выбранного слота уже наступило");
-                    }
-                }else{
-                    throw new SlotIsBussy("Нельзя перенести запись на занятый слот");
-                }
-
-            }else{
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "Перенос возможен только к прежнему врачу");
-            }
+            return new TransferAppointmentPreview(currentAppointmentDetailsView, newAppointmentPreview);
 
         }else{
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Новый слот не прошёл комплексную проверку");
+        }
+    }
+
+    @Transactional(timeout = 30)
+    public void saveTransferAppointment(Long currentAppointmentId, Long newSlotId, String currentUserLogin){
+
+        Appointment oldAppointment = requireTransferableAppointment(currentAppointmentId, currentUserLogin,1);
+
+        Long oldSlotId = oldAppointment.getSlot().getId();
+
+        if (oldSlotId.equals(newSlotId)) {
             throw new SlotIsBussy("Нельзя перенести запись на тот же слот");
+        }
+
+        Slot oldSlot;
+        Slot selectedSlot;
+
+        if (oldSlotId.compareTo(newSlotId) < 0) {
+
+            oldSlot = slotRepository.findByIdForUpdate(oldSlotId)
+                    .orElseThrow(() -> new SlotNotFoundException("Прежний слот не найден"));
+
+            selectedSlot = slotRepository.findByIdForUpdate(newSlotId)
+                    .orElseThrow(() -> new SlotNotFoundException("Новый слот не найден"));
+        } else {
+
+            selectedSlot = slotRepository.findByIdForUpdate(newSlotId)
+                    .orElseThrow(() -> new SlotNotFoundException("Новый слот не найден"));
+
+            oldSlot = slotRepository.findByIdForUpdate(oldSlotId)
+                    .orElseThrow(() -> new SlotNotFoundException("Прежний слот не найден"));
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+
+        if (oldSlot.getSlotStart().isBefore(now.plusMinutes(10))) {
+            throw new SlotIsNotInDateTimeZone("Запись можно перенести не позднее, чем за 10 минут до её начала");
+        }
+
+        if(checkNewSlot(selectedSlot,oldAppointment)){
+
+            oldSlot.setStatus(SlotStatus.FREE);
+            slotRepository.save(oldSlot);
+            oldAppointment.setSlot(selectedSlot);
+            selectedSlot.setStatus(SlotStatus.BOOKED);
+            slotRepository.save(selectedSlot);
+            appointmentRepository.save(oldAppointment);
+
+        }else{
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Новый слот не прошёл комплексную проверку");
         }
     }
 
 
+
+
+
     private Appointment requireTransferableAppointment(
             Long appointmentId,
-            String currentUserLogin){
+            String currentUserLogin, int mode){
 
         User currentUser = userRepository.findByLogin(currentUserLogin).orElseThrow(() ->
                 new UserNotFoundException("Пользователь не найден"));
 
-        Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(()->
-                new AppointmentNotFoundException("Посещение не найдено"));
+        Appointment appointment;
+
+        if(mode == 0){
+
+             appointment = appointmentRepository.findById(appointmentId).orElseThrow(()->
+                    new AppointmentNotFoundException("Посещение не найдено"));
+
+        } else if (mode == 1) {
+            appointment = appointmentRepository.findByIdForUpdate(appointmentId).orElseThrow(()->
+                    new AppointmentNotFoundException("Посещение не найдено"));
+        }else{
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Выбран недопустимый вариант загрузки");
+        }
 
         boolean allowed = switch (currentUser.getRole()) {
             case PATIENT -> appointment.getPatient().getUser().getId().equals(currentUser.getId());
@@ -356,6 +409,32 @@ public class AppointmentService {
         }
 
         return appointment;
+    }
+
+
+
+    private boolean checkNewSlot(Slot selectedSlot, Appointment oldAppointment){
+
+        if(!selectedSlot.getId().equals(oldAppointment.getSlot().getId())){
+            if(selectedSlot.getDoctor().getId().equals(oldAppointment.getSlot().getDoctor().getId())){
+                if(selectedSlot.getStatus().equals(SlotStatus.FREE)){
+                    if(selectedSlot.getSlotStart().isAfter(LocalDateTime.now())){
+                        return true;
+                    }else{
+                        throw  new SlotIsNotInDateTimeZone("Время начала выбранного слота уже наступило");
+                    }
+                }else{
+                    throw new SlotIsBussy("Нельзя перенести запись на занятый слот");
+                }
+
+            }else{
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Перенос возможен только к прежнему врачу");
+            }
+
+        }else{
+            throw new SlotIsBussy("Нельзя перенести запись на тот же слот");
+        }
+
     }
 
 //    @Transactional(readOnly = true)

@@ -38,7 +38,15 @@
                 <div class="comparison-new"><p class="comparison-label">После переноса</p><p class="comparison-state">Ваш новый выбор</p><strong class="comparison-date" th:text="${#temporals.format(proposed.appointmentDate,'dd.MM.yyyy')}">Дата</strong><p class="comparison-time" th:text="${#temporals.format(proposed.appointStartTime,'HH:mm') + ' — ' + #temporals.format(proposed.appointmentEndTime,'HH:mm')}">Время</p><a class="comparison-edit" th:href="@{/transferSelectTime(transferAppointmentId=${appointment.appointmentId},selectDate=${proposed.appointmentDate})}">Изменить выбор ↗</a></div>
             </div>
             <section class="unchanged-details" aria-labelledby="unchanged-title"><h3 id="unchanged-title">Остаётся без изменений</h3><dl><div><dt>Пациент</dt><dd><span th:text="${appointment.patientLastName}">Фамилия</span> <span th:text="${appointment.patientFirstName}">Имя</span><th:block th:if="${not #strings.isEmpty(appointment.patientMiddleName)}"> <span th:text="${appointment.patientMiddleName}">Отчество</span></th:block></dd></div><div><dt>Врач</dt><dd><span th:text="${appointment.doctorLastName}">Фамилия</span> <span th:text="${appointment.doctorFirstName}">Имя</span><th:block th:if="${not #strings.isEmpty(appointment.doctorMiddleName)}"> <span th:text="${appointment.doctorMiddleName}">Отчество</span></th:block></dd></div><div><dt>Медицинское направление</dt><dd th:text="${appointment.specialityName}">Специальность</dd></div><div><dt>Продолжительность</dt><dd>30 минут</dd></div></dl></section>
-            <div class="transfer-confirm-area"><p>Новый слот ещё не забронирован. Если он станет недоступен, прежняя запись должна остаться действующей.</p><button type="button" disabled>Подтвердить перенос <span aria-hidden="true">→</span></button><p class="pending-transfer">Окончательное подтверждение пока недоступно. Вы можете проверить и изменить выбор.</p></div>
+            <div class="transfer-confirm-area">
+                <p>После подтверждения прежнее время освободится, а выбранное будет закреплено за вами. Если новый слот уже занят, перенос не выполнится.</p>
+                <form th:action="@{/saveTransfer}" method="post">
+                    <input type="hidden" name="transferAppointmentId" th:value="${appointment.appointmentId}">
+                    <input type="hidden" name="selectSlotId" th:value="${proposed.slotId}">
+                    <button type="submit">Подтвердить перенос <span aria-hidden="true">→</span></button>
+                </form>
+                <p class="pending-transfer">До успешного подтверждения прежняя запись остаётся действующей.</p>
+            </div>
         </section>
         <div class="date-actions"><a class="return-to-time" th:href="@{/transferSelectTime(transferAppointmentId=${appointment.appointmentId},selectDate=${proposed.appointmentDate})}">← Вернуться к времени</a><a class="cancel-booking" th:href="@{/appointmentDetails(currentAppointmentId=${appointment.appointmentId})}">Прервать перенос</a></div>
         <div class="directory-footer"><span>Электронная регистратура</span><span>Ваше здоровье — в центре внимания</span></div>

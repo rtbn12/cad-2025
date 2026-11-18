@@ -16,8 +16,11 @@
 .unchanged-details dd { font-size: 14px; color: #1a4f76; overflow-wrap: anywhere; }
 .transfer-confirm-area { border-top: 1px solid #e2e8f0; padding: 22px 26px; background: #f8fafc; }
 .transfer-confirm-area p { font-size: 12px; color: #4a5568; line-height: 1.8; }
-.transfer-confirm-area button { display: flex; justify-content: space-between; align-items: center; gap: 15px; width: 100%; margin-top: 18px; padding: 14px 17px; background: #e2e8f0; color: #4a5568; border: 1px solid #cbd5e0; border-radius: 5px; font: inherit; font-size: 14px; cursor: not-allowed; }
+.transfer-confirm-area button { display: flex; justify-content: space-between; align-items: center; gap: 15px; width: 100%; margin-top: 18px; padding: 14px 17px; background: #2a6b9c; color: #ffffff; border: 1px solid #2a6b9c; border-radius: 5px; font: inherit; font-size: 14px; cursor: pointer; }
 .transfer-confirm-area .pending-transfer { font-size: 11px; margin-top: 9px; }
 .return-to-time { text-decoration: none; }
 @media(max-width:1000px) { .comparison-date { font-size: 23px; } .comparison-time { font-size: 18px; } }
 @media(max-width:600px) { .transfer-comparison { grid-template-columns: 1fr; } .transfer-comparison > div { padding: 24px; } .comparison-old { border-right: 0; border-bottom: 1px solid #e2e8f0; } .comparison-new { box-shadow: inset 3px 0 #2a6b9c; } .comparison-arrow { top: auto; bottom: calc(50% - 15px); transform: translateX(-50%) rotate(90deg); } .comparison-caption { max-width: none; } .comparison-date { font-size: 28px; } .comparison-time { font-size: 23px; } .unchanged-details { padding: 22px; } .unchanged-details dl { grid-template-columns: 1fr; } .transfer-confirm-area { padding: 22px; } }
+
+.transfer-confirm-area button:hover { background: #1a4f76; border-color: #1a4f76; }
+.transfer-confirm-area button:focus-visible { outline: 3px solid #2a6b9c; outline-offset: 4px; }
