@@ -1,9 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.AppointmentDetailsView;
-import com.example.demo.dto.AppointmentMiniView;
-import com.example.demo.dto.DateView;
-import com.example.demo.dto.TransferAppointmentView;
+import com.example.demo.dto.*;
 import com.example.demo.entity.*;
 import com.example.demo.exception.*;
 import com.example.demo.repository.*;
@@ -25,18 +22,21 @@ public class AppointmentService {
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
     private final SlotRepository slotRepository;
+    private final TimeSlotService timeSlotService;
 
     public AppointmentService(AppointmentRepository appointmentRepository,
                               UserRepository userRepository,
                               PatientRepository patientRepository,
                               DoctorRepository doctorRepository,
-                              SlotRepository slotRepository) {
+                              SlotRepository slotRepository,
+                              TimeSlotService timeSlotService) {
 
         this.appointmentRepository = appointmentRepository;
         this.userRepository = userRepository;
         this.patientRepository = patientRepository;
         this.doctorRepository = doctorRepository;
         this.slotRepository = slotRepository;
+        this.timeSlotService = timeSlotService;
     }
 
     @Transactional(readOnly = true)
@@ -201,10 +201,75 @@ public class AppointmentService {
     @Transactional(readOnly = true)
     public TransferAppointmentView getTransferAppointment(Long currentAppointmentId, String currentUserLogin){
 
-        User currentUser = userRepository.findByLogin(currentUserLogin).orElseThrow(() ->
-                        new UserNotFoundException("Пользователь не найден"));
+        Appointment appointment = requireTransferableAppointment(currentAppointmentId, currentUserLogin);
 
-        Appointment appointment = appointmentRepository.findById(currentAppointmentId).orElseThrow(()->
+        LocalDateTime now = LocalDateTime.now();
+
+        AppointmentMiniView currentMiniView = new AppointmentMiniView(appointment.getSlot().getSlotStart().toLocalDate(),
+                appointment.getSlot().getSlotStart().toLocalTime(),
+                appointment.getSlot().getSlotEnd().toLocalTime(),
+                appointment.getSlot().getDoctor().getSpeciality().getName(),
+                appointment.getSlot().getDoctor().getFirstName(),
+                appointment.getSlot().getDoctor().getMiddleName(),
+                appointment.getSlot().getDoctor().getLastName(),
+                appointment.getPatient().getFirstName(),
+                appointment.getPatient().getMiddleName(),
+                appointment.getPatient().getLastName(),
+                appointment.getId(),
+                appointment.getStatus());
+
+        AppointmentDetailsView currentAppointmentDetailsView = new AppointmentDetailsView(
+                currentMiniView,
+                appointment.getPatient().getId(),
+                appointment.getSlot().getDoctor().getId(),
+                appointment.getSlot().getDoctor().getSpeciality().getId(),
+                appointment.getSlot().getId(),
+                appointment.getCreatedAt(),
+                appointment.getCancelledAt(),
+                appointment.getCreatedBy().getRole());
+
+        List<LocalDate> availableDates = slotRepository.findAvailableDates(
+                appointment.getSlot().getDoctor().getId(), now);
+
+        List<DateView> dates = new ArrayList<>();
+
+        for (LocalDate availableDate : availableDates){
+            dates.add(new DateView(availableDate));
+        }
+        return new TransferAppointmentView(currentAppointmentDetailsView, dates);
+
+    }
+
+
+    @Transactional(readOnly = true)
+    public TransferTimeView getTransferTimeView(Long currentAppointmentId,
+                                                LocalDate currentDate,
+                                                String currentUserLogin){
+
+        if (currentDate.isBefore(LocalDate.now())) {
+            throw new DateIsNotVariable("Нельзя выбрать прошедшую дату");
+        }
+
+        Appointment appointment = requireTransferableAppointment(currentAppointmentId, currentUserLogin);
+
+        TimeSelectView currentTimeSelectView = timeSlotService.getTimeSelectView(
+                appointment.getSlot().getDoctor().getId(), currentDate);
+
+        AppointmentDetailsView currentAppointmentDetailsView = getDetailView(currentAppointmentId, currentUserLogin);
+
+        return new TransferTimeView(currentAppointmentDetailsView, currentTimeSelectView);
+
+    }
+
+
+    private Appointment requireTransferableAppointment(
+            Long appointmentId,
+            String currentUserLogin){
+
+        User currentUser = userRepository.findByLogin(currentUserLogin).orElseThrow(() ->
+                new UserNotFoundException("Пользователь не найден"));
+
+        Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(()->
                 new AppointmentNotFoundException("Посещение не найдено"));
 
         boolean allowed = switch (currentUser.getRole()) {
@@ -219,57 +284,26 @@ public class AppointmentService {
             throw new AccessDeniedException("Нет доступа к этой записи на приём");
         }
 
-        Slot currentSlot = appointment.getSlot();
-        LocalDateTime now = LocalDateTime.now();
+        if (!appointment.getStatus().equals(AppointmentStatus.CREATED)){
 
-        if(appointment.getStatus().equals(AppointmentStatus.CREATED)){
-            if (!currentSlot.getSlotStart().isBefore(now.plusMinutes(10))){
-
-                AppointmentMiniView currentMiniView = new AppointmentMiniView(appointment.getSlot().getSlotStart().toLocalDate(),
-                        appointment.getSlot().getSlotStart().toLocalTime(),
-                        appointment.getSlot().getSlotEnd().toLocalTime(),
-                        appointment.getSlot().getDoctor().getSpeciality().getName(),
-                        appointment.getSlot().getDoctor().getFirstName(),
-                        appointment.getSlot().getDoctor().getMiddleName(),
-                        appointment.getSlot().getDoctor().getLastName(),
-                        appointment.getPatient().getFirstName(),
-                        appointment.getPatient().getMiddleName(),
-                        appointment.getPatient().getLastName(),
-                        appointment.getId(),
-                        appointment.getStatus());
-
-                AppointmentDetailsView currentAppointmentDetailsView = new AppointmentDetailsView(
-                        currentMiniView,
-                        appointment.getPatient().getId(),
-                        appointment.getSlot().getDoctor().getId(),
-                        appointment.getSlot().getDoctor().getSpeciality().getId(),
-                        appointment.getSlot().getId(),
-                        appointment.getCreatedAt(),
-                        appointment.getCancelledAt(),
-                        appointment.getCreatedBy().getRole());
-
-                List<LocalDate> availableDates = slotRepository.findAvailableDates(
-                        appointment.getSlot().getDoctor().getId(), now);
-
-                List<DateView> dates = new ArrayList<>();
-
-                for (LocalDate availableDate : availableDates){
-                    dates.add(new DateView(availableDate));
-                }
-
-                return new TransferAppointmentView(currentAppointmentDetailsView, dates);
-
-            }else{
-                if (appointment.getSlot().getSlotStart().isAfter(now)){
-                    throw  new SlotIsNotInDateTimeZone("Запись можно перенести не позднее, чем за 10 минут до её начала");
-                }else{
-                    throw  new SlotIsNotInDateTimeZone("Нельзя перенести запись, время начала которой уже прошло");
-                }
-            }
-        }else{
             throw new AppointmentIsNotCreated("Заявка на посещение не активная");
         }
 
+        LocalDateTime nowDateTime = LocalDateTime.now();
+
+        LocalDateTime oldTimeStart = appointment.getSlot().getSlotStart();
+
+        if (!oldTimeStart.isAfter(nowDateTime)) {
+            throw new SlotIsNotInDateTimeZone(
+                    "Нельзя перенести запись, время начала которой уже наступило"
+            );
+        }
+
+        if(oldTimeStart.isBefore(nowDateTime.plusMinutes(10))){
+            throw  new SlotIsNotInDateTimeZone("Запись можно перенести не позднее, чем за 10 минут до её начала");
+        }
+
+        return appointment;
     }
 
 //    @Transactional(readOnly = true)
