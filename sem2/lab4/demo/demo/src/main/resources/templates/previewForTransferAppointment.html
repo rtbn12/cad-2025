@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Проверка переноса · Электронная регистратура</title>
+    <link rel="icon" th:href="@{/images/icon.ico}">
+    <link rel="stylesheet" th:href="@{/styles/RegistrationStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/SpecialityStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/DoctorStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/DateStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/TimeStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/TransferStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/TransferPreviewStyle.css}">
+</head>
+<body class="specialities-page doctors-page times-page transfer-page">
+<header class="directory-header"><div class="directory-header-inner">
+    <a class="directory-brand" th:href="@{/}"><img th:src="@{/images/icon.ico}" width="38" height="38" alt=""><span>Электронная регистратура<small>Запись на приём</small></span></a>
+    <a class="cabinet-link" th:href="@{/}"><span aria-hidden="true">←</span> Личный кабинет</a>
+</div></header>
+<main class="directory-layout" th:with="details=${transferAppointmentPreview.oldAppointmentDetailsView}, appointment=${transferAppointmentPreview.oldAppointmentDetailsView.appointment}, proposed=${transferAppointmentPreview.appointmentPreviewView}">
+    <aside class="journey" aria-label="Этапы переноса">
+        <p class="eyebrow">Перенос записи</p>
+        <ol class="journey-steps">
+            <li class="is-complete"><a class="completed-step" th:href="@{/transferSelectDate(transferAppointmentId=${appointment.appointmentId})}"><span class="step-number" aria-hidden="true">✓</span><div><strong>Новая дата</strong><span th:text="${#temporals.format(proposed.appointmentDate,'dd.MM.yyyy')}">Дата выбрана</span></div></a></li>
+            <li class="is-complete"><a class="completed-step" th:href="@{/transferSelectTime(transferAppointmentId=${appointment.appointmentId},selectDate=${proposed.appointmentDate})}"><span class="step-number" aria-hidden="true">✓</span><div><strong>Новое время</strong><span>Интервал выбран</span></div></a></li>
+            <li class="is-current" aria-current="step"><span class="step-number">03</span><div><strong>Подтверждение</strong><span>Проверка изменений</span></div></li>
+        </ol>
+        <div class="selected-direction"><p class="eyebrow">Прежний приём</p><strong th:text="${#temporals.format(appointment.date,'dd.MM.yyyy')}">Дата</strong><p class="old-time" th:text="${#temporals.format(appointment.startAppointment,'HH:mm') + ' — ' + #temporals.format(appointment.endAppointment,'HH:mm')}">Время</p><span class="preserved-badge">Запись остаётся действующей</span></div>
+    </aside>
+    <section class="directory-content" aria-labelledby="page-title">
+        <div class="directory-heading"><a class="back-to-directions" th:href="@{/transferSelectTime(transferAppointmentId=${appointment.appointmentId},selectDate=${proposed.appointmentDate})}">← К выбору нового времени</a><p class="eyebrow">Шаг 03 / 03</p><h1 id="page-title">Было. Будет.<br><span>Проверьте изменения.</span></h1><p class="directory-intro">Меняются только дата и время. Пациент и врач остаются прежними. Сравните оба варианта перед подтверждением.</p></div>
+        <section class="speciality-panel" aria-labelledby="comparison-title">
+            <div class="panel-heading"><h2 id="comparison-title">Перенос записи</h2><span class="count-badge" th:text="${'№ ' + appointment.appointmentId}">№ 1</span></div>
+            <div class="transfer-comparison">
+                <div class="comparison-old"><p class="comparison-label">Сейчас</p><p class="comparison-state">Действующая запись</p><strong class="comparison-date" th:text="${#temporals.format(appointment.date,'dd.MM.yyyy')}">Дата</strong><p class="comparison-time" th:text="${#temporals.format(appointment.startAppointment,'HH:mm') + ' — ' + #temporals.format(appointment.endAppointment,'HH:mm')}">Время</p><p class="comparison-caption">Это время остаётся за вами до успешного переноса.</p></div>
+                <span class="comparison-arrow" aria-hidden="true">→</span>
+                <div class="comparison-new"><p class="comparison-label">После переноса</p><p class="comparison-state">Ваш новый выбор</p><strong class="comparison-date" th:text="${#temporals.format(proposed.appointmentDate,'dd.MM.yyyy')}">Дата</strong><p class="comparison-time" th:text="${#temporals.format(proposed.appointStartTime,'HH:mm') + ' — ' + #temporals.format(proposed.appointmentEndTime,'HH:mm')}">Время</p><a class="comparison-edit" th:href="@{/transferSelectTime(transferAppointmentId=${appointment.appointmentId},selectDate=${proposed.appointmentDate})}">Изменить выбор ↗</a></div>
+            </div>
+            <section class="unchanged-details" aria-labelledby="unchanged-title"><h3 id="unchanged-title">Остаётся без изменений</h3><dl><div><dt>Пациент</dt><dd><span th:text="${appointment.patientLastName}">Фамилия</span> <span th:text="${appointment.patientFirstName}">Имя</span><th:block th:if="${not #strings.isEmpty(appointment.patientMiddleName)}"> <span th:text="${appointment.patientMiddleName}">Отчество</span></th:block></dd></div><div><dt>Врач</dt><dd><span th:text="${appointment.doctorLastName}">Фамилия</span> <span th:text="${appointment.doctorFirstName}">Имя</span><th:block th:if="${not #strings.isEmpty(appointment.doctorMiddleName)}"> <span th:text="${appointment.doctorMiddleName}">Отчество</span></th:block></dd></div><div><dt>Медицинское направление</dt><dd th:text="${appointment.specialityName}">Специальность</dd></div><div><dt>Продолжительность</dt><dd>30 минут</dd></div></dl></section>
+            <div class="transfer-confirm-area"><p>Новый слот ещё не забронирован. Если он станет недоступен, прежняя запись должна остаться действующей.</p><button type="button" disabled>Подтвердить перенос <span aria-hidden="true">→</span></button><p class="pending-transfer">Окончательное подтверждение пока недоступно. Вы можете проверить и изменить выбор.</p></div>
+        </section>
+        <div class="date-actions"><a class="return-to-time" th:href="@{/transferSelectTime(transferAppointmentId=${appointment.appointmentId},selectDate=${proposed.appointmentDate})}">← Вернуться к времени</a><a class="cancel-booking" th:href="@{/appointmentDetails(currentAppointmentId=${appointment.appointmentId})}">Прервать перенос</a></div>
+        <div class="directory-footer"><span>Электронная регистратура</span><span>Ваше здоровье — в центре внимания</span></div>
+    </section>
+</main>
+</body>
+</html>

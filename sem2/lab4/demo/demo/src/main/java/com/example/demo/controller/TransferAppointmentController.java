@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.TransferAppointmentPreview;
 import com.example.demo.dto.TransferAppointmentView;
 import com.example.demo.dto.TransferTimeView;
 import com.example.demo.service.AppointmentService;
@@ -47,6 +48,19 @@ public class TransferAppointmentController {
         model.addAttribute("transferTimeView", currentTransferTimeView);
 
         return  "transferSelectTime";
+    }
+
+    @GetMapping("/checkTransferAppointment")
+    public String getPreviewForTransferAppointment(@RequestParam("transferAppointmentId") Long transferAppointmentId,
+                                                   @RequestParam("selectSlotId") Long selectSlotId,
+                                                   Authentication authentication, Model model){
+
+        TransferAppointmentPreview transferAppointmentPreview = appointmentService.getTransferAppointmentPreview(
+                transferAppointmentId, selectSlotId, authentication.getName());
+
+        model.addAttribute("transferAppointmentPreview", transferAppointmentPreview);
+
+        return "previewForTransferAppointment";
     }
 
 
