@@ -25,7 +25,7 @@ public class Registrar {
     @Column(name = "middle_name", length = 100)
     private String middleName;
 
-    @Column(name = "phone", length = 16)
+    @Column(name = "phone", length = 16, unique = true)
     private String phone;
 
     public Registrar() {

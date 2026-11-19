@@ -60,7 +60,9 @@ public class RegistrationController {
                 result = PatientRegistrationResult.LOGIN_TAKEN;
             } else if ("patients_oms_number_key".equals(constraintName)) {
                 result = PatientRegistrationResult.OMS_TAKEN;
-            } else {
+            }else if ("patients_phone_key".equals(constraintName)) {
+                result = PatientRegistrationResult.PHONE_TAKEN;}
+            else {
                 throw exception;
             }
         }
@@ -78,7 +80,16 @@ public class RegistrationController {
             );
             return "registrarForm";
 
-        }else{
+        }else if (result.equals(PatientRegistrationResult.PHONE_TAKEN)) {
+
+            bindingResult.rejectValue(
+                    "phone",
+                    "phone.taken",
+                    "Этот номер телефона уже используется"
+            );
+            return "registrarForm";
+
+        } else{
 
             bindingResult.rejectValue(
                     "omsNumber",

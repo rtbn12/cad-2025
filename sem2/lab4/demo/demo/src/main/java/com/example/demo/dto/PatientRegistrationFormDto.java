@@ -12,6 +12,7 @@ public class PatientRegistrationFormDto {
     private String login;
 
     @NotBlank(message = "Введите пароль")
+    @Pattern(regexp = PasswordRules.REQUIRED, message = PasswordRules.MESSAGE)
     private String password;
 
     @NotBlank(message = "Введите пароль повторно")

@@ -42,29 +42,37 @@ public class PatientRegistrationService {
 
             }else{
 
-                User currentUser = new User();
+                if(patientRepository.existsByPhone(patientDto.getPhone())){
 
-                currentUser.setRole(UserRole.PATIENT);
-                currentUser.setLogin(patientDto.getLogin());
-                currentUser.setPasswordHash(
-                        passwordEncoder.encode(patientDto.getPassword()));
-                currentUser.setCreatedAt(LocalDateTime.now());
+                    return PatientRegistrationResult.PHONE_TAKEN;
+                }else{
 
-                userRepository.save(currentUser);
+                    User currentUser = new User();
 
-                Patient currentPatient = new Patient();
+                    currentUser.setRole(UserRole.PATIENT);
+                    currentUser.setLogin(patientDto.getLogin());
+                    currentUser.setPasswordHash(
+                            passwordEncoder.encode(patientDto.getPassword()));
+                    currentUser.setCreatedAt(LocalDateTime.now());
 
-                currentPatient.setFirstName(patientDto.getFirstName());
-                currentPatient.setMiddleName(patientDto.getMiddleName());
-                currentPatient.setLastName(patientDto.getLastName());
-                currentPatient.setUser(currentUser);
-                currentPatient.setBirthDate(patientDto.getBirthDate());
-                currentPatient.setPhone(patientDto.getPhone());
-                currentPatient.setOmsNumber(patientDto.getOmsNumber());
+                    userRepository.save(currentUser);
 
-                patientRepository.save(currentPatient);
+                    Patient currentPatient = new Patient();
 
-                return PatientRegistrationResult.SUCCESS;
+                    currentPatient.setFirstName(patientDto.getFirstName());
+                    currentPatient.setMiddleName(patientDto.getMiddleName());
+                    currentPatient.setLastName(patientDto.getLastName());
+                    currentPatient.setUser(currentUser);
+                    currentPatient.setBirthDate(patientDto.getBirthDate());
+                    currentPatient.setPhone(patientDto.getPhone());
+                    currentPatient.setOmsNumber(patientDto.getOmsNumber());
+
+                    patientRepository.save(currentPatient);
+
+                    return PatientRegistrationResult.SUCCESS;
+
+                }
+
 
             }
 

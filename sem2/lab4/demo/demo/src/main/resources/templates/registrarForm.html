@@ -22,6 +22,7 @@
         <h2>Регистрация пациента</h2>
         <p>Создайте аккаунт, чтобы записываться на приём и управлять своими записями.</p>
     </div>
+    <p class="password-guidance">От 10 до 72 символов: латиница, минимум одна заглавная буква и спецсимвол !@#$%^&*()_+=?.,:;~-; без пробелов</p>
     <form class="registration-form" th:action="@{/registrationResult}"
           th:object="${registrationForm}" method="post" aria-label="Регистрация пациента">
         <div class="form-error" role="alert" th:if="${#fields.hasGlobalErrors()}">

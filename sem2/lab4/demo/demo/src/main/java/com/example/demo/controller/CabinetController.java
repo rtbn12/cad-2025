@@ -1,16 +1,21 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AppointmentDetailsView;
-import com.example.demo.dto.AppointmentMiniView;
-import com.example.demo.dto.CabinetView;
+import com.example.demo.dto.*;
 import com.example.demo.entity.UserRole;
 import com.example.demo.service.AppointmentService;
 import com.example.demo.service.CabinetService;
+import com.example.demo.service.PatientRegistrationResult;
+import com.example.demo.service.PatientCabinetUpdateService;
+import jakarta.validation.Valid;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -22,12 +27,15 @@ public class CabinetController {
 
     private final CabinetService cabinetService;
     private final AppointmentService appointmentService;
+    private final PatientCabinetUpdateService patientCabinetUpdateService;
 
     public CabinetController(CabinetService cabinetService,
-                             AppointmentService appointmentService) {
+                             AppointmentService appointmentService,
+                             PatientCabinetUpdateService patientCabinetUpdateService) {
 
         this.cabinetService = cabinetService;
         this.appointmentService = appointmentService;
+        this.patientCabinetUpdateService = patientCabinetUpdateService;
     }
 
     @GetMapping("/")
@@ -80,6 +88,100 @@ public class CabinetController {
     @GetMapping("/cancellationSuccess")
     public String cancellationSuccess() {
         return "checkCanceled";
+    }
+
+    @PreAuthorize("hasRole('PATIENT')")
+    @GetMapping("/startUpdatePatientProfile")
+    public String startUpdatePatientProfile(Authentication authentication, Model model){
+
+        PatientProfileUpdateFormDto patientProfileForUpdate = patientCabinetUpdateService.
+                getPatientProfileForUpdate(authentication.getName());
+
+        model.addAttribute("updateForm", patientProfileForUpdate);
+
+        return "updatePatientProfileForm";
+
+    }
+
+    @PreAuthorize("hasRole('PATIENT')")
+    @PostMapping("/updateProfileResult")
+    public String updateProfileTrueResult(@Valid @ModelAttribute("updateForm") PatientProfileUpdateFormDto updateForm,
+                                          BindingResult bindingResult,
+                                          Authentication authentication)
+    {
+        if (bindingResult.hasErrors()) {
+            return "updatePatientProfileForm";
+        }
+
+        if (updateForm.isChangePassword() && !java.util.Objects.equals(updateForm.getPatientNewPassword(), updateForm.getPatientNewPasswordTwo())) {
+            bindingResult.rejectValue(
+                    "patientNewPasswordTwo",
+                    "password.mismatch",
+                    "Пароли не совпадают"
+            );
+            return "updatePatientProfileForm";
+        }
+
+        PatientRegistrationResult result;
+
+        try {
+            result = patientCabinetUpdateService.updateUserProfile(authentication.getName(), updateForm);
+        } catch (DataIntegrityViolationException exception) {
+            String constraintName = findConstraintName(exception);
+
+            if ("patients_oms_number_key".equals(constraintName)) {
+                result = PatientRegistrationResult.OMS_TAKEN;
+            }else if ("patients_phone_key".equals(constraintName)) {
+                result = PatientRegistrationResult.PHONE_TAKEN;}
+            else {
+                throw exception;
+            }
+        }
+
+        if (result.equals(PatientRegistrationResult.SUCCESS)){
+
+            return "redirect:/endUpdatePatientProfile";
+
+
+        }else if (result.equals(PatientRegistrationResult.PHONE_TAKEN)) {
+
+            bindingResult.rejectValue(
+                    "patientPhone",
+                    "phone.taken",
+                    "Этот номер телефона уже используется"
+            );
+            return "updatePatientProfileForm";
+
+        } else{
+
+            bindingResult.rejectValue(
+                    "patientOmsNumber",
+                    "omsNumber.taken",
+                    "Этот номер ОМС уже используется"
+            );
+            return "updatePatientProfileForm";
+        }
+
+    }
+
+    @GetMapping("/endUpdatePatientProfile")
+    public String goToEndUpdateProfile(){
+
+        return "endUpdatePatientProfileForm";
+    }
+
+    private String findConstraintName(Throwable exception) {
+        Throwable cause = exception;
+
+        while (cause != null) {
+            if (cause instanceof ConstraintViolationException violation) {
+                return violation.getConstraintName();
+            }
+
+            cause = cause.getCause();
+        }
+
+        return null;
     }
 
 //    @GetMapping("/logout")

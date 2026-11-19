@@ -34,7 +34,7 @@ public class Patient {
     @Column(name = "oms_number", nullable = false, length = 16, unique = true)
     private String omsNumber;
 
-    @Column(name = "phone", nullable = false, length = 16)
+    @Column(name = "phone", nullable = false, length = 16, unique = true)
     private String phone;
 
     @OneToMany(mappedBy = "patient")
