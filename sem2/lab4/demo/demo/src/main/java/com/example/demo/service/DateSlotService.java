@@ -6,8 +6,10 @@ import com.example.demo.entity.Doctor;
 import com.example.demo.exception.DoctorNotFoundException;
 import com.example.demo.repository.DoctorRepository;
 import com.example.demo.repository.SlotRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,7 +28,7 @@ public class DateSlotService {
     }
 
     @Transactional(readOnly = true)
-    public DateSelectView getDataSelectView (Long selectDoctorId){
+    public DateSelectView getDataSelectView (Long selectDoctorId, int mode){
 
         Doctor doctor = doctorRepository.findById(selectDoctorId).orElseThrow(() ->
                 new DoctorNotFoundException("Доктор не найден"));
@@ -35,7 +37,15 @@ public class DateSlotService {
 
         Long doctorSpecialityId = doctor.getSpeciality().getId();
 
-        List<LocalDate> availableDates = slotRepository.findAvailableDates(selectDoctorId, LocalDateTime.now());
+        List<LocalDate> availableDates;
+
+        if(mode == 0){
+            availableDates = slotRepository.findAvailableDates(selectDoctorId, LocalDateTime.now());
+        }else if (mode == 1){
+            availableDates = slotRepository.findDatesForRegistrar(selectDoctorId, LocalDateTime.now());
+        }else{
+            throw new IllegalArgumentException("Выбран недопустимый вариант загрузки");
+        }
 
         List<DateView> dats = new ArrayList<>();
 

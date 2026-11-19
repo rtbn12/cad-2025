@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${doctorsView.specialityName + ' · Врачи · Электронная регистратура'}">Врачи · Электронная регистратура</title>
+    <link rel="icon" th:href="@{/images/icon.ico}">
+    <link rel="stylesheet" th:href="@{/styles/RegistrationStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/SpecialityStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/DoctorStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/DateStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/RegistrarDirectoryStyle.css}">
+</head>
+<body class="specialities-page doctors-page">
+<header class="directory-header">
+    <div class="directory-header-inner">
+        <a class="directory-brand" th:href="@{/}">
+            <img th:src="@{/images/icon.ico}" width="38" height="38" alt="">
+            <span>Электронная регистратура<small>Рабочее место регистратора</small></span>
+        </a>
+        <a class="cabinet-link" th:href="@{/}"><span aria-hidden="true">←</span> Личный кабинет</a>
+    </div>
+</header>
+<main class="directory-layout">
+    <aside class="journey" aria-label="Этапы поиска врача">
+        <p class="eyebrow">Рабочее место регистратора</p>
+        <ol class="journey-steps">
+            <li class="is-complete"><a class="completed-step" th:href="@{/regSelectSpeciality}"><span class="step-number" aria-hidden="true">✓</span><div><strong>Специальность</strong><span>Направление выбрано</span></div></a></li>
+            <li class="is-current" aria-current="step"><span class="step-number">02</span><div><strong>Врач</strong><span>Выбор специалиста</span></div></li>
+            <li><span class="step-number">03</span><div><strong>Дата</strong><span>День расписания</span></div></li>
+            <li><span class="step-number">04</span><div><strong>Слоты</strong><span>Свободные и занятые</span></div></li>
+        </ol>
+        <div class="selected-direction">
+            <p class="eyebrow">Выбранное направление</p>
+            <strong th:text="${doctorsView.specialityName}">Специальность</strong>
+            <a th:href="@{/regSelectSpeciality}">Изменить <span aria-hidden="true">↗</span></a>
+        </div>
+    </aside>
+    <section class="directory-content" aria-labelledby="page-title">
+        <div class="directory-heading">
+            <a class="back-to-directions" th:href="@{/regSelectSpeciality}"><span aria-hidden="true">←</span> Все специальности</a>
+            <p class="eyebrow">Шаг 02 / 04</p>
+            <h1 id="page-title">Специалисты<br><span>выбранного направления.</span></h1>
+            <p class="directory-intro">Найдите нужного специалиста в списке. Здесь собраны все врачи выбранной специальности.</p>
+        </div>
+        <section class="speciality-panel doctors-panel" aria-labelledby="doctors-title">
+            <div class="panel-heading">
+                <div><p class="panel-kicker">Медицинское направление</p><h2 id="doctors-title" th:text="${doctorsView.specialityName}">Специальность</h2></div>
+                <span class="count-badge" th:text="${#lists.size(doctorsView.doctors)}" aria-label="Количество врачей">0</span>
+            </div>
+            <ul class="doctor-list" th:unless="${#lists.isEmpty(doctorsView.doctors)}">
+                <li class="doctor-card" th:each="doctor, item : ${doctorsView.doctors}">
+                    <div class="doctor-avatar" aria-hidden="true" th:text="${#strings.substring(doctor.lastName, 0, 1) + #strings.substring(doctor.firstName, 0, 1)}">ФИ</div>
+                    <div class="doctor-details">
+                        <p class="doctor-caption">Медицинский сотрудник</p>
+                        <h3><span class="doctor-last-name" th:text="${doctor.lastName}">Фамилия</span><span class="doctor-given-name"><span th:text="${doctor.firstName}">Имя</span><th:block th:if="${not #strings.isEmpty(doctor.middleName)}"> <span th:text="${doctor.middleName}">Отчество</span></th:block></span></h3>
+                        <p class="doctor-speciality"><span class="speciality-dot" aria-hidden="true"></span><span th:text="${doctorsView.specialityName}">Специальность</span></p>
+                    </div>
+                    <a class="doctor-date-link registrar-schedule-link" th:href="@{/regSelectDate(selectedDoctorId=${doctor.doctorId})}">Расписание врача <span aria-hidden="true">→</span></a>
+                    <span class="doctor-number" aria-hidden="true" th:text="${item.count < 10 ? '0' + item.count : item.count}">01</span>
+                </li>
+            </ul>
+            <div class="empty-state" th:if="${#lists.isEmpty(doctorsView.doctors)}" role="status">
+                <span class="empty-symbol" aria-hidden="true">+</span>
+                <h3>Врачей пока нет</h3>
+                <p>В этом направлении пока нет специалистов.<br>Выберите другую специальность или уточните информацию в регистратуре.</p>
+                <a class="empty-back" th:href="@{/regSelectSpeciality}">Посмотреть другие специальности <span aria-hidden="true">↗</span></a>
+            </div>
+            <div class="doctors-panel-footer" th:unless="${#lists.isEmpty(doctorsView.doctors)}"><span class="footer-cross" aria-hidden="true">+</span><p>Выбранное направление можно изменить в любой момент.</p></div>
+        </section>
+        <div class="booking-cancel"><a class="cancel-booking" th:href="@{/}">Завершить поиск</a></div>
+        <div class="directory-footer"><span>Электронная регистратура</span><span>Ваше здоровье — в центре внимания</span></div>
+    </section>
+</main>
+
+</body>
+</html>

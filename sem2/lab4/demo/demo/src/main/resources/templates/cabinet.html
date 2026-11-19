@@ -172,7 +172,8 @@
         </div>
 
         <div class="actions">
-            <a class="appointment-link" th:if="${cabinet.role.name() == 'PATIENT' or cabinet.role.name() == 'REGISTRAR'}"
+            <a class="appointment-link" th:if="${cabinet.role.name() == 'REGISTRAR'}" th:href="@{/regSelectSpeciality}">Найти врача <span aria-hidden="true">↗</span></a>
+            <a class="appointment-link" th:if="${cabinet.role.name() == 'PATIENT'}"
                th:href="@{/cabinet/createAppointment/setSpeciality}">Записаться на приём <span aria-hidden="true">↗</span></a>
             <a th:if="${cabinet.role.name() == 'PATIENT'}" th:href="@{/startUpdatePatientProfile}">Редактировать данные</a>
             <button type="submit">Выйти из аккаунта</button>

@@ -67,7 +67,7 @@ public class CreateAppointmentController {
     @GetMapping("/setDate")
     public String getDats(@RequestParam("selectDoctorId") Long selectDoctorId, Model model){
 
-        DateSelectView dateSelectView = dateSlotService.getDataSelectView(selectDoctorId);
+        DateSelectView dateSelectView = dateSlotService.getDataSelectView(selectDoctorId, 0);
         model.addAttribute("dateView", dateSelectView);
 
         return "selectDate";

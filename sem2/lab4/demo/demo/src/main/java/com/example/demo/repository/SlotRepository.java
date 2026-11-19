@@ -45,4 +45,17 @@ public interface SlotRepository extends JpaRepository<Slot, Long> {
     @Query("SELECT s FROM Slot s WHERE s.id = :id")
     Optional<Slot> findByIdForUpdate(@Param("id") Long id);
 
+
+    @Query(value = """
+        SELECT DISTINCT CAST(s.slot_start AS date) AS available_date
+        FROM public.slots s
+        WHERE s.doctor_id = :doctorId
+          AND s.slot_end > :now
+        ORDER BY available_date
+        """, nativeQuery = true)
+    List<LocalDate> findDatesForRegistrar(
+            @Param("doctorId") Long doctorId,
+            @Param("now") LocalDateTime now
+    );
+
 }
