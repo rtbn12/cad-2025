@@ -121,6 +121,9 @@
         }
         .appointment-link:hover { background: #1a4f76; }
         .actions { gap: 12px; flex-wrap: wrap; }
+        .profile-edit-link, .profile-edit-link:visited { display:inline-flex; align-items:center; justify-content:center; padding:11px 18px; border:1px solid #cbd5e0; border-radius:9px; background:#fff; color:#2a6b9c; font-weight:600; text-decoration:none; }
+        .profile-edit-link:hover { background:#f8fafc; border-color:#2a6b9c; }
+        @media(max-width:560px) { .profile-edit-link { width:100%; box-sizing:border-box; } }
         :focus-visible { outline: 3px solid #2a6b9c; outline-offset: 3px; }
 
         @media (max-width: 560px) {
@@ -175,7 +178,7 @@
             <a class="appointment-link" th:if="${cabinet.role.name() == 'REGISTRAR'}" th:href="@{/regSelectSpeciality}">Найти врача <span aria-hidden="true">↗</span></a>
             <a class="appointment-link" th:if="${cabinet.role.name() == 'PATIENT'}"
                th:href="@{/cabinet/createAppointment/setSpeciality}">Записаться на приём <span aria-hidden="true">↗</span></a>
-            <a th:if="${cabinet.role.name() == 'PATIENT'}" th:href="@{/startUpdatePatientProfile}">Редактировать данные</a>
+            <a class="profile-edit-link" th:if="${cabinet.role.name() == 'PATIENT'}" th:href="@{/startUpdatePatientProfile}">Редактировать данные</a>
             <button type="submit">Выйти из аккаунта</button>
         </div>
     </form>

@@ -1,9 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.DateSelectView;
-import com.example.demo.dto.DoctorSelectionView;
-import com.example.demo.dto.SpecialityView;
-import com.example.demo.dto.TimeSelectView;
+import com.example.demo.dto.*;
 import com.example.demo.service.SearchRegistrarService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -69,6 +66,18 @@ public class RegistrarController {
         model.addAttribute("timesView", timesView);
 
         return "regSelectTimeView";
+    }
+
+    @GetMapping("/regGetAppointment")
+    public String getAppointment(@RequestParam("currentSlotId") Long currentSlotId,
+                                 Authentication authentication, Model model){
+
+        AppointmentDetailsView appointmentDetailsView = searchRegistrarService.getAppointmentView(
+                authentication.getName(), currentSlotId);
+
+        model.addAttribute("appointmentDetailsView", appointmentDetailsView);
+
+        return "regGetAppointmentView";
     }
 
 

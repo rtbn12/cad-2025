@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Детали записи · Электронная регистратура</title>
+    <link rel="icon" th:href="@{/images/icon.ico}">
+    <link rel="stylesheet" th:href="@{/styles/RegistrationStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/SpecialityStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/PreviewStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/AppointmentDetailsStyle.css}">
+</head>
+<body>
+<header class="directory-header"><div class="directory-header-inner"><a class="directory-brand" th:href="@{/}"><img th:src="@{/images/icon.ico}" width="38" height="38" alt=""><span>Электронная регистратура<small>Детали посещения</small></span></a><a class="cabinet-link" th:href="@{/}">Личный кабинет <span aria-hidden="true">↗</span></a></div></header>
+<main class="details-layout" th:with="details=${appointmentDetailsView}, appointment=${appointmentDetailsView.appointment}">
+    <a class="details-back" th:href="@{/regSelectTime(selectedDoctorId=${details.doctorId},selectedDate=${appointment.date})}">← К слотам врача</a>
+    <div class="details-heading"><div><p class="eyebrow">Расписание врача</p><h1>Кто записан.<br><span>Все детали приёма.</span></h1></div><span class="record-number" th:text="${'Запись № ' + appointment.appointmentId}">Запись № 1</span></div>
+    <section class="speciality-panel" aria-labelledby="details-title">
+        <div class="panel-heading"><h2 id="details-title">Детали приёма</h2><div th:switch="${appointment.status.name()}"><span class="details-status" th:case="'CREATED'">Запись активна</span><span class="details-status is-muted" th:case="'COMPLETED'">Приём завершён</span><span class="details-status is-muted" th:case="'CANCELLED_BY_PATIENT'">Отменена пациентом</span><span class="details-status is-muted" th:case="'CANCELLED_BY_REGISTRAR'">Отменена регистратором</span><span class="details-status" th:case="*">Статус уточняется</span></div></div>
+        <div class="appointment-highlight"><div><p>Дата приёма</p><strong th:text="${#temporals.format(appointment.date,'dd.MM.yyyy')}">16.11.2026</strong></div><div class="highlight-time"><p>Время приёма</p><strong><span th:text="${#temporals.format(appointment.startAppointment,'HH:mm')}">08:00</span><span class="time-separator">—</span><span th:text="${#temporals.format(appointment.endAppointment,'HH:mm')}">08:30</span></strong></div></div>
+        <dl class="preview-details">
+            <div class="preview-detail"><dt>Пациент</dt><dd><span th:text="${appointment.patientLastName}">Фамилия</span> <span th:text="${appointment.patientFirstName}">Имя</span><th:block th:if="${not #strings.isEmpty(appointment.patientMiddleName)}"> <span th:text="${appointment.patientMiddleName}">Отчество</span></th:block></dd></div>
+            <div class="preview-detail"><dt>Врач</dt><dd><span th:text="${appointment.doctorLastName}">Фамилия</span> <span th:text="${appointment.doctorFirstName}">Имя</span><th:block th:if="${not #strings.isEmpty(appointment.doctorMiddleName)}"> <span th:text="${appointment.doctorMiddleName}">Отчество</span></th:block></dd></div>
+            <div class="preview-detail"><dt>Медицинское направление</dt><dd th:text="${appointment.specialityName}">Специальность</dd></div>
+            <div class="preview-detail"><dt>Продолжительность</dt><dd>30 минут</dd></div>
+        </dl>
+        <section class="record-history" aria-labelledby="history-title"><h3 id="history-title">История записи</h3><dl><div><dt>Дата создания</dt><dd th:text="${#temporals.format(details.createdAt,'dd.MM.yyyy HH:mm')}">Дата</dd></div><div><dt>Кто оформил</dt><dd th:text="${details.createdByRole.name() == 'PATIENT' ? 'Пациент' : (details.createdByRole.name() == 'REGISTRAR' ? 'Сотрудник регистратуры' : 'Медицинский сотрудник')}">Пациент</dd></div><div th:if="${details.cancelledAt != null}"><dt>Дата отмены</dt><dd th:text="${#temporals.format(details.cancelledAt,'dd.MM.yyyy HH:mm')}">Дата</dd></div></dl></section>
+
+        <div class="doctor-readonly"><span aria-hidden="true">+</span><p>Просмотр записи из расписания врача. Данные пациента и время приёма остаются без изменений.</p></div>
+    </section>
+    <div class="details-bottom"><a class="details-home" th:href="@{/regSelectTime(selectedDoctorId=${details.doctorId},selectedDate=${appointment.date})}">К слотам врача <span aria-hidden="true">→</span></a><a class="cancel-booking" th:href="@{/}">Прервать поиск</a></div>
+    <div class="directory-footer"><span>Электронная регистратура</span><span>Ваше здоровье — в центре внимания</span></div>
+</main>
+</body>
+</html>

@@ -58,7 +58,7 @@
             <div class="empty-state" th:if="${#lists.isEmpty(datesView.dataViews)}" role="status"><span class="empty-symbol" aria-hidden="true">+</span><h3>Актуального расписания пока нет</h3><p>У выбранного врача нет текущих или предстоящих слотов.<br>Посмотрите расписание другого специалиста этого направления.</p><a class="empty-back" th:href="@{/regSelectDoctor(selectedSpecialityId=${datesView.selectSpecialityId})}">Выбрать другого врача <span aria-hidden="true">↗</span></a></div>
             <div class="doctors-panel-footer" th:unless="${#lists.isEmpty(datesView.dataViews)}"><span class="footer-cross" aria-hidden="true">+</span><p>Выбор даты не создаёт запись и не занимает время врача.</p></div>
         </section>
-        <div class="date-actions"><a class="return-to-doctors" th:href="@{/regSelectDoctor(selectedSpecialityId=${datesView.selectSpecialityId})}">← Вернуться к врачам</a><a class="cancel-booking" th:href="@{/}">Завершить поиск</a></div>
+        <div class="date-actions"><a class="return-to-doctors" th:href="@{/regSelectDoctor(selectedSpecialityId=${datesView.selectSpecialityId})}">← Вернуться к врачам</a><a class="cancel-booking" th:href="@{/}">Прервать поиск</a></div>
         <div class="directory-footer"><span>Электронная регистратура</span><span>Ваше здоровье — в центре внимания</span></div>
     </section>
 </main>

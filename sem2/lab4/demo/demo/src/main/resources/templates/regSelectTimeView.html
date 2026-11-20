@@ -45,6 +45,7 @@
             <div class="time-legend"><span><i class="legend-free" aria-hidden="true"></i>Свободно</span><span><i class="legend-unavailable" aria-hidden="true"></i>Занято</span><span class="duration-label" th:text="${#lists.size(timesView.timeSlots) + ' слотов'}">Слоты дня</span></div>
             <ul class="registrar-slot-grid" th:unless="${#lists.isEmpty(timesView.timeSlots)}" aria-label="Слоты расписания">
                 <li class="registrar-slot" th:each="slot : ${timesView.timeSlots}" th:classappend="${slot.status.name() == 'BOOKED'} ? 'slot-booked' : 'slot-free'">
+                    <a class="slot-details-link" th:if="${slot.status.name() == 'BOOKED'}" th:href="@{/regGetAppointment(currentSlotId=${slot.slotId})}" th:attr="aria-label=${'Посещение с ' + #temporals.format(slot.start,'HH:mm') + ' до ' + #temporals.format(slot.end,'HH:mm')}"><span>Подробнее о посещении →</span></a>
                     <div class="slot-top"><span class="slot-eyebrow">Время приёма</span><span class="slot-status" th:text="${slot.status.name() == 'BOOKED' ? 'Занято' : 'Свободно'}">Статус</span></div>
                     <p class="slot-interval"><strong th:text="${#temporals.format(slot.start,'HH:mm')}">09:00</strong><span aria-hidden="true">—</span><span th:text="${#temporals.format(slot.end,'HH:mm')}">09:30</span></p>
                     <p class="slot-caption" th:text="${slot.status.name() == 'BOOKED' ? 'Время закреплено за пациентом' : 'Пациент не записан'}">Сведения о слоте</p>
@@ -54,7 +55,7 @@
             <div class="empty-state" th:if="${#lists.isEmpty(timesView.timeSlots)}" role="status"><h3>Актуальных слотов нет</h3><p>Выберите другую дату расписания.</p></div>
             <div class="doctors-panel-footer"><span class="footer-cross" aria-hidden="true">+</span><p>Просмотр расписания не изменяет записи пациентов.</p></div>
         </section>
-        <div class="date-actions"><a class="return-to-dates" th:href="@{/regSelectDate(selectedDoctorId=${timesView.selectDoctorId})}">← Вернуться к датам</a><a class="cancel-booking" th:href="@{/}">Завершить поиск</a></div>
+        <div class="date-actions"><a class="return-to-dates" th:href="@{/regSelectSpeciality}">← К выбору специальности</a><a class="cancel-booking" th:href="@{/}">Прервать поиск</a></div>
         <div class="directory-footer"><span>Электронная регистратура</span><span>Ваше здоровье — в центре внимания</span></div>
     </section>
 </main>
