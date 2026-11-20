@@ -88,7 +88,7 @@ public class CreateAppointmentController {
             throw new DateNotFoundException("Дата посещения вне допустимого диапазона");
         }
 
-        TimeSelectView timeSelectView = timeSlotService.getTimeSelectView(selectDoctorId, selectDate);
+        TimeSelectView timeSelectView = timeSlotService.getTimeSelectView(selectDoctorId, selectDate, 0);
         model.addAttribute("timeView", timeSelectView);
 
         return "selectTime";

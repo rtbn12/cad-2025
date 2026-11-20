@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Время приёма · Электронная регистратура</title>
+    <link rel="icon" th:href="@{/images/icon.ico}">
+    <link rel="stylesheet" th:href="@{/styles/RegistrationStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/SpecialityStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/DoctorStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/DateStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/TimeStyle.css}">
+    <link rel="stylesheet" th:href="@{/styles/RegistrarDirectoryStyle.css}">
+</head>
+<body class="specialities-page doctors-page times-page">
+<header class="directory-header"><div class="directory-header-inner">
+    <a class="directory-brand" th:href="@{/}"><img th:src="@{/images/icon.ico}" width="38" height="38" alt=""><span>Электронная регистратура<small>Расписание врача</small></span></a>
+    <a class="cabinet-link" th:href="@{/}"><span aria-hidden="true">←</span> Личный кабинет</a>
+</div></header>
+<main class="directory-layout">
+    <aside class="journey" aria-label="Этапы просмотра расписания">
+        <p class="eyebrow">Расписание врача</p>
+        <ol class="journey-steps">
+            <li class="is-complete"><a class="completed-step" th:href="@{/regSelectSpeciality}"><span class="step-number" aria-hidden="true">✓</span><div><strong>Специальность</strong><span>Направление выбрано</span></div></a></li>
+            <li class="is-complete"><a class="completed-step" th:href="@{/regSelectDoctor(selectedSpecialityId=${timesView.selectDoctorSpecialityId})}"><span class="step-number" aria-hidden="true">✓</span><div><strong>Врач</strong><span>Специалист выбран</span></div></a></li>
+            <li class="is-complete"><a class="completed-step" th:href="@{/regSelectDate(selectedDoctorId=${timesView.selectDoctorId})}"><span class="step-number" aria-hidden="true">✓</span><div><strong>Дата</strong><span th:text="${#temporals.format(timesView.selectDate,'dd.MM.yyyy')}">Дата выбрана</span></div></a></li>
+            <li class="is-current" aria-current="step"><span class="step-number">04</span><div><strong>Слоты</strong><span>Расписание дня</span></div></li>
+        </ol>
+        <div class="selected-direction"><p class="eyebrow">Выбранное направление</p><strong th:text="${timesView.selectSpecialityName}">Специальность</strong><a th:href="@{/regSelectSpeciality}">Изменить <span aria-hidden="true">↗</span></a></div>
+    </aside>
+    <section class="directory-content" aria-labelledby="page-title">
+        <div class="directory-heading">
+            <a class="back-to-directions" th:href="@{/regSelectDate(selectedDoctorId=${timesView.selectDoctorId})}"><span aria-hidden="true">←</span> К выбору даты</a>
+            <p class="eyebrow">Шаг 04 / 04</p>
+            <h1 id="page-title">День врача.<br><span>Всё по времени.</span></h1>
+            <p class="directory-intro">Текущие и предстоящие слоты выбранного дня. Свободное время и записи пациентов — в одном расписании.</p>
+        </div>
+        <section class="chosen-doctor" aria-label="Выбранный врач">
+            <div class="doctor-avatar" aria-hidden="true" th:text="${#strings.substring(timesView.selectDoctorLastName,0,1) + #strings.substring(timesView.selectDoctorFirstName,0,1)}">ИИ</div>
+            <div class="doctor-details"><p class="doctor-caption">Выбранный врач</p><h2><span th:text="${timesView.selectDoctorLastName}">Фамилия</span> <span th:text="${timesView.selectDoctorFirstName}">Имя</span><th:block th:if="${not #strings.isEmpty(timesView.selectDoctorMiddleName)}"> <span th:text="${timesView.selectDoctorMiddleName}">Отчество</span></th:block></h2><p class="doctor-speciality" th:text="${timesView.selectSpecialityName}">Специальность</p></div>
+            <a class="change-doctor" th:href="@{/regSelectDoctor(selectedSpecialityId=${timesView.selectDoctorSpecialityId})}">Другой врач <span aria-hidden="true">↗</span></a>
+        </section>
+        <section class="speciality-panel" aria-labelledby="times-title">
+            <div class="panel-heading time-panel-heading"><div><p class="panel-kicker">Время приёма</p><h2 id="times-title" th:text="${#temporals.format(timesView.selectDate,'dd.MM.yyyy')}">Дата посещения</h2></div><a class="change-date" th:href="@{/regSelectDate(selectedDoctorId=${timesView.selectDoctorId})}">Изменить дату <span aria-hidden="true">↗</span></a></div>
+            <div class="time-legend"><span><i class="legend-free" aria-hidden="true"></i>Свободно</span><span><i class="legend-unavailable" aria-hidden="true"></i>Занято</span><span class="duration-label" th:text="${#lists.size(timesView.timeSlots) + ' слотов'}">Слоты дня</span></div>
+            <ul class="registrar-slot-grid" th:unless="${#lists.isEmpty(timesView.timeSlots)}" aria-label="Слоты расписания">
+                <li class="registrar-slot" th:each="slot : ${timesView.timeSlots}" th:classappend="${slot.status.name() == 'BOOKED'} ? 'slot-booked' : 'slot-free'">
+                    <div class="slot-top"><span class="slot-eyebrow">Время приёма</span><span class="slot-status" th:text="${slot.status.name() == 'BOOKED' ? 'Занято' : 'Свободно'}">Статус</span></div>
+                    <p class="slot-interval"><strong th:text="${#temporals.format(slot.start,'HH:mm')}">09:00</strong><span aria-hidden="true">—</span><span th:text="${#temporals.format(slot.end,'HH:mm')}">09:30</span></p>
+                    <p class="slot-caption" th:text="${slot.status.name() == 'BOOKED' ? 'Время закреплено за пациентом' : 'Пациент не записан'}">Сведения о слоте</p>
+                    <p class="slot-current" th:if="${!timesView.selectDate.atTime(slot.start).isAfter(#temporals.createNow())}" th:text="${slot.status.name() == 'BOOKED' ? 'Приём идёт' : 'Интервал уже начался'}">Текущий интервал</p>
+                </li>
+            </ul>
+            <div class="empty-state" th:if="${#lists.isEmpty(timesView.timeSlots)}" role="status"><h3>Актуальных слотов нет</h3><p>Выберите другую дату расписания.</p></div>
+            <div class="doctors-panel-footer"><span class="footer-cross" aria-hidden="true">+</span><p>Просмотр расписания не изменяет записи пациентов.</p></div>
+        </section>
+        <div class="date-actions"><a class="return-to-dates" th:href="@{/regSelectDate(selectedDoctorId=${timesView.selectDoctorId})}">← Вернуться к датам</a><a class="cancel-booking" th:href="@{/}">Завершить поиск</a></div>
+        <div class="directory-footer"><span>Электронная регистратура</span><span>Ваше здоровье — в центре внимания</span></div>
+    </section>
+</main>
+
+</body>
+</html>

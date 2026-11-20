@@ -58,4 +58,20 @@ public interface SlotRepository extends JpaRepository<Slot, Long> {
             @Param("now") LocalDateTime now
     );
 
+    @Query(value = """
+        SELECT s.*
+        FROM public.slots s
+        WHERE s.doctor_id = :doctorId
+          AND s.slot_start >= :dayStart
+          AND s.slot_start < :nextDayStart
+          AND s.slot_end > :now
+        ORDER BY s.slot_start
+        """, nativeQuery = true)
+    List<Slot> findSlotsForDayRegistrar(
+            @Param("doctorId") Long doctorId,
+            @Param("dayStart") LocalDateTime dayStart,
+            @Param("nextDayStart") LocalDateTime nextDayStart,
+            @Param("now") LocalDateTime now
+    );
+
 }

@@ -10,3 +10,14 @@
     .dates-page .chosen-doctor { display:grid; grid-template-columns:auto minmax(0,1fr); gap:16px; }
     .dates-page .chosen-doctor .change-doctor { grid-column:1 / -1; justify-self:start; margin:0; }
 }
+.registrar-slot-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; list-style:none; padding:24px; margin:0; }
+.registrar-slot { min-width:0; padding:22px; border:1px solid #cbd5e0; border-top:3px solid #2a6b9c; border-radius:8px; background:#ffffff; }
+.registrar-slot.slot-booked { background:#f8fafc; border-top-color:#4a5568; }
+.slot-top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+.slot-eyebrow { font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:#4a5568; }
+.slot-status { font-size:11px; padding:5px 9px; border:1px solid #cbd5e0; border-radius:5px; color:#1a4f76; }
+.slot-interval { display:flex; align-items:baseline; flex-wrap:wrap; gap:10px; margin:24px 0 12px; color:#1a4f76; font-size:21px; }
+.slot-interval strong { font-size:30px; font-weight:500; letter-spacing:-.04em; }
+.slot-caption { color:#4a5568; font-size:12px; line-height:1.7; }
+.slot-current { margin-top:14px; color:#2a6b9c; font-size:12px; font-weight:600; }
+@media(max-width:600px) { .registrar-slot-grid { grid-template-columns:1fr; padding:18px; } .times-page .chosen-doctor { display:grid; grid-template-columns:auto minmax(0,1fr); gap:16px; } .times-page .chosen-doctor .change-doctor { grid-column:1 / -1; justify-self:start; margin:0; } }

@@ -42,19 +42,19 @@
         </section>
         <section class="speciality-panel dates-panel" aria-labelledby="dates-title">
             <div class="panel-heading"><div><p class="panel-kicker">Расписание приёма</p><h2 id="dates-title">Даты расписания</h2></div><span class="count-badge" th:text="${#lists.size(datesView.dataViews)}" aria-label="Количество дат расписания">0</span></div>
-            <div th:unless="${#lists.isEmpty(datesView.dataViews)}">
+            <form th:unless="${#lists.isEmpty(datesView.dataViews)}" th:action="@{/regSelectTime}" method="get">
                 <input type="hidden" name="selectedDoctorId" th:value="${datesView.doctorId}">
             <fieldset th:with="months=${ {'января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'} }, weekdays=${ {'понедельник','вторник','среда','четверг','пятница','суббота','воскресенье'} }" class="dates-fieldset" th:unless="${#lists.isEmpty(datesView.dataViews)}">
                 <legend class="visually-hidden">Выберите дату расписания</legend>
                 <div class="date-grid">
                     <label class="date-option" th:each="day : ${datesView.dataViews}">
-                        <input type="radio" name="selectDate" required th:value="${day.dateSlot}" th:attr="aria-label=${#temporals.format(day.dateSlot, 'dd.MM.yyyy')}">
+                        <input type="radio" name="selectedDate" required th:value="${day.dateSlot}" th:attr="aria-label=${#temporals.format(day.dateSlot, 'dd.MM.yyyy')}">
                         <span class="date-tile"><span class="date-weekday" th:text="${weekdays[day.dateSlot.dayOfWeek.value - 1]}">Понедельник</span><span class="date-number" th:text="${#temporals.format(day.dateSlot, 'dd')}">16</span><span class="date-month" th:text="${months[day.dateSlot.monthValue - 1] + ' ' + day.dateSlot.year}">ноября 2026</span><span class="date-availability"><span aria-hidden="true">·</span> Есть расписание</span><span class="date-check" aria-hidden="true">✓</span></span>
                     </label>
                 </div>
             </fieldset>
-            <div class="date-continue"><button type="button" disabled>Просмотр слотов недоступен</button></div>
-            </div>
+            <div class="date-continue"><button type="submit">Посмотреть слоты <span aria-hidden="true">→</span></button></div>
+            </form>
             <div class="empty-state" th:if="${#lists.isEmpty(datesView.dataViews)}" role="status"><span class="empty-symbol" aria-hidden="true">+</span><h3>Актуального расписания пока нет</h3><p>У выбранного врача нет текущих или предстоящих слотов.<br>Посмотрите расписание другого специалиста этого направления.</p><a class="empty-back" th:href="@{/regSelectDoctor(selectedSpecialityId=${datesView.selectSpecialityId})}">Выбрать другого врача <span aria-hidden="true">↗</span></a></div>
             <div class="doctors-panel-footer" th:unless="${#lists.isEmpty(datesView.dataViews)}"><span class="footer-cross" aria-hidden="true">+</span><p>Выбор даты не создаёт запись и не занимает время врача.</p></div>
         </section>

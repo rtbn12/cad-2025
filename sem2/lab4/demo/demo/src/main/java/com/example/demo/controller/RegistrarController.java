@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.DateSelectView;
 import com.example.demo.dto.DoctorSelectionView;
 import com.example.demo.dto.SpecialityView;
+import com.example.demo.dto.TimeSelectView;
 import com.example.demo.service.SearchRegistrarService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -11,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -54,6 +56,19 @@ public class RegistrarController {
         model.addAttribute("datesView", datesView);
 
         return "regSelectDateView";
+    }
+
+    @GetMapping("/regSelectTime")
+    public String selectTimeView(@RequestParam("selectedDoctorId") Long selectedDoctorId,
+                                 @RequestParam("selectedDate") LocalDate selectedDate,
+                                 Authentication authentication, Model model){
+
+        TimeSelectView timesView = searchRegistrarService.getTimes(authentication.getName(),
+                selectedDoctorId, selectedDate);
+
+        model.addAttribute("timesView", timesView);
+
+        return "regSelectTimeView";
     }
 
 

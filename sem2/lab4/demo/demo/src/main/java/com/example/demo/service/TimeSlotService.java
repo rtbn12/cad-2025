@@ -30,7 +30,7 @@ public class TimeSlotService {
     }
 
     @Transactional(readOnly = true)
-    public TimeSelectView getTimeSelectView(Long selectDoctorId, LocalDate selectDate) {
+    public TimeSelectView getTimeSelectView(Long selectDoctorId, LocalDate selectDate, int mode) {
 
         Doctor doctor = doctorRepository.findById(selectDoctorId).orElseThrow(() ->
                 new DoctorNotFoundException("Доктор не найден"));
@@ -39,9 +39,18 @@ public class TimeSlotService {
         LocalDateTime dayStart = selectDate.atStartOfDay();
         LocalDateTime nextDayStart = selectDate.plusDays(1).atStartOfDay();
         LocalDateTime now = LocalDateTime.now();
+        List<Slot> slots;
 
-        List<Slot> slots = slotRepository.findSlotsForDay(
-                selectDoctorId, dayStart, nextDayStart);
+        if(mode == 0){
+            slots = slotRepository.findSlotsForDay(
+                    selectDoctorId, dayStart, nextDayStart);
+        }else if(mode == 1){
+
+            slots = slotRepository.findSlotsForDayRegistrar(selectDoctorId, dayStart, nextDayStart, now);
+        }else{
+            throw new IllegalArgumentException("Выбран недопустимый вариант загрузки");
+        }
+
         if (slots.isEmpty()) {
             throw new DateNotFoundException("У врача нет расписания на выбранную дату");
         }

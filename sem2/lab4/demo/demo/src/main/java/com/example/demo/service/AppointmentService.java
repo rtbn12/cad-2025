@@ -258,7 +258,7 @@ public class AppointmentService {
         Appointment appointment = requireTransferableAppointment(currentAppointmentId, currentUserLogin, 0);
 
         TimeSelectView currentTimeSelectView = timeSlotService.getTimeSelectView(
-                appointment.getSlot().getDoctor().getId(), currentDate);
+                appointment.getSlot().getDoctor().getId(), currentDate, 0);
 
         AppointmentDetailsView currentAppointmentDetailsView = getDetailView(currentAppointmentId, currentUserLogin);
 

@@ -3,8 +3,10 @@ package com.example.demo.service;
 import com.example.demo.dto.DateSelectView;
 import com.example.demo.dto.DoctorSelectionView;
 import com.example.demo.dto.SpecialityView;
+import com.example.demo.dto.TimeSelectView;
 import com.example.demo.entity.User;
 import com.example.demo.entity.UserRole;
+import com.example.demo.exception.SlotIsNotInDateTimeZone;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -21,15 +24,18 @@ public class SearchRegistrarService {
     private final UserRepository userRepository;
     private final DoctorsService doctorsService;
     private final DateSlotService dateSlotService;
+    private final TimeSlotService timeSlotService;
 
 
     public SearchRegistrarService(SpecialityService specialityService, UserRepository userRepository,
-                                  DoctorsService doctorsService, DateSlotService dateSlotService) {
+                                  DoctorsService doctorsService, DateSlotService dateSlotService,
+                                  TimeSlotService timeSlotService) {
 
         this.specialityService = specialityService;
         this.userRepository = userRepository;
         this.doctorsService = doctorsService;
         this.dateSlotService = dateSlotService;
+        this.timeSlotService = timeSlotService;
     }
 
     @Transactional(readOnly = true)
@@ -48,6 +54,16 @@ public class SearchRegistrarService {
     public DateSelectView getDates(String currentUserLogin, Long selectDoctorId){
         baseCheck(currentUserLogin);
         return dateSlotService.getDataSelectView(selectDoctorId, 1);
+    }
+
+    @Transactional(readOnly = true)
+    public TimeSelectView getTimes(String currentUserLogin, Long selectDoctorId, LocalDate selectDate){
+        baseCheck(currentUserLogin);
+        if(selectDate.isBefore(LocalDate.now())){
+
+            throw new SlotIsNotInDateTimeZone("Нельзя выбрать прошедшую дату");
+        }
+        return timeSlotService.getTimeSelectView(selectDoctorId, selectDate, 1);
     }
 
 
