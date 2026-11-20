@@ -7,6 +7,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
+import com.example.demo.exception.PatientNotFoundException;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
@@ -80,5 +85,46 @@ public class RegistrarController {
         return "regGetAppointmentView";
     }
 
+    @GetMapping("/regStartSearchPatient")
+    public String getStartSearchPatient(Authentication authentication, Model model){
+        searchRegistrarService.baseCheck(authentication.getName());
+        PatientSearchFormDto form = new PatientSearchFormDto();
+        form.setSearchType(PatientSearchType.OMS);
+        model.addAttribute("searchForm", form);
+        return "regStartSearchPatientView";
+    }
 
+    @PostMapping("/regGetPatient")
+    public String getPatientView(@Valid @ModelAttribute("searchForm") PatientSearchFormDto form,
+                                 BindingResult bindingResult,
+                                 Authentication authentication){
+        if (bindingResult.hasErrors()) {
+            return "regStartSearchPatientView";
+        }
+        Long patientUserId;
+        try {
+            patientUserId = searchRegistrarService.getSearchPatientId(authentication.getName(),
+                    form.getSearchType(), form.getSearchValue());
+        } catch (IllegalArgumentException exception) {
+            bindingResult.rejectValue("searchValue", "search.invalid", exception.getMessage());
+            return "regStartSearchPatientView";
+        } catch (PatientNotFoundException exception) {
+            return "redirect:/regPatientNotFound";
+        }
+        return "redirect:/regGetPatientResult?patientUserId=" + patientUserId;
+    }
+
+    @GetMapping("/regPatientNotFound")
+    public String patientNotFound(){
+        return "regPatientNotFoundView";
+    }
+
+    @GetMapping("/regGetPatientResult")
+    public String getStartSearchPatientResult(@RequestParam("patientUserId") Long patientUserId,
+                                              Authentication authentication, Model model){
+        SearchPatientMiniCabinetView patientCabinetView = searchRegistrarService.getPatientCabinetView(
+                authentication.getName(), patientUserId);
+        model.addAttribute("patientCabinetView", patientCabinetView);
+        return "regGetPatientResultView";
+    }
 }
